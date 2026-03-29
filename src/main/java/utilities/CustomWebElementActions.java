@@ -331,13 +331,13 @@ public class CustomWebElementActions {
             // Normalize label for case-insensitive matching
             String normalizedLabel = elementName.toLowerCase();
 
-            // XPath with and without etool-validator
+            // XPath with and without validator
             By locator = By.xpath(
                     "//*[contains(translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'" + normalizedLabel + ")]" +
-                            "//ancestor-or-self::etool-validator//input[@type='text']" +
+                            "//ancestor-or-self::validator//input[@type='text']" +
                             " | " +
                             "//*[contains (translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnoparstuvwxyz'),'" + normalizedLabel + "')]" +
-                            "//ancestor-or-self::etool-validator//textarea" +
+                            "//ancestor-or-self::validator//textarea" +
                             " | " +
                             "//*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + normalizedLabel + "')]" +
                             "//following::input[@type='text'][1]" +
@@ -1360,7 +1360,7 @@ public class CustomWebElementActions {
         WebElement parentDropdownSection = driver.findElement(By.xpath(
                 "//*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
                         + dropdownElementName.toLowerCase().trim()
-                        + "')]//ancestor-or-self:: etool-validator//p-autocomplete | //*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
+                        + "')]//ancestor-or-self:: validator//p-autocomplete | //*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
                         + dropdownElementName.toLowerCase().trim()
                         + "')]//ancestor-or-self::div[contains(@class, 'fieldset-description')]"));
 
@@ -1412,7 +1412,7 @@ public class CustomWebElementActions {
         // Create locator for parent section (simplified XPath)
         String parentXpath = String.format(
                 "//*[contains(translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '%s')]"
-                        + "/ancestor::*[self::etool-validator or contains (@class, 'fieldset-description')]",
+                        + "/ancestor::*[self::validator or contains (@class, 'fieldset-description')]",
                 normalizedElementName);
 
         try {
@@ -2059,7 +2059,7 @@ public class CustomWebElementActions {
             Select selectDropdown = new Select(driver.findElement(By.xpath(
                     "//*[contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
                             + dropdownName.toLowerCase().trim()
-                            + "')]//ancestor-or-self::etool-validator//select | //*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
+                            + "')]//ancestor-or-self::validator//select | //*[contains (translate (normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
                             + dropdownName.toLowerCase().trim()
                             + "')]//ancestor-or-self::div[contains(@class, 'fieldset-description')]//select")));
 
