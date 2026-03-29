@@ -1,0 +1,80 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Regression with Allure
+
+on:
+  # schedule:
+  #   - cron: "30 18 * * *"
+  workflow_dispatch:
+    inputs:
+      env:
+        required: true
+        default: "dev"
+      url:
+        required: true
+        default: "https://rahulshettyacademy.com/client"
+      browser:
+        required: true
+        default: "chrome"
+      tags:
+        required: true
+        default: "@Regression"
+
+env:
+  RUN_ENV: dev
+  RUN_URL: https://rahulshettyacademy.com/client
+  RUN_BROWSER: chrome
+  RUN_TAGS: "@Regression"
+
+  EMAIL: ${{ secrets.EMAIL }}
+  PASSWORD: ${{ secrets.PASSWORD }}
+
+permissions:
+  contents: write
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: "3.8.2"
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+
+      - name: Run Tests
+        run: |
+          mvn clean test \
+          -Denv="${RUN_ENV}" \
+          -Durl="${RUN_URL}" \
+          -Dbrowser="${RUN_BROWSER}" \
+          -Dcucumber.filter.tags="${RUN_TAGS}" \
+          -DEMAIL="${EMAIL}" \
+          -DPASSWORD="${PASSWORD}"
+
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin
