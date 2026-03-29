@@ -1,0 +1,186 @@
+# =========================================================
+# WORKFLOW NAME (Shown in GitHub Actions tab)
+# =========================================================
+name: Regression with Allure 3
+
+
+# =========================================================
+# WHEN THIS WORKFLOW SHOULD RUN
+# =========================================================
+on:
+
+  # -------------------------------------------------------
+  # 1) SCHEDULED RUN (Automatic run every day)
+  # Cron format: Minute Hour Day Month DayOfWeek
+  # "30 18 * * *" = 12:00 AM IST (6:30 PM UTC)
+  # -------------------------------------------------------
+  schedule:
+    - cron: "30 18 * * *"
+
+  # -------------------------------------------------------
+  # 2) MANUAL RUN FROM GITHUB UI
+  # Allows you to click "Run workflow"
+  # -------------------------------------------------------
+  workflow_dispatch:
+
+    # -----------------------------------------------------
+    # INPUT PARAMETERS (User can choose values while running)
+    # -----------------------------------------------------
+    inputs:
+
+      env:
+        description: "Environment to run tests on (dev/int/staging)"
+        required: true
+        default: "dev"
+
+      url:
+        description: "Base URL for application"
+        required: true
+        default: "https://url"
+
+      browser:
+        description: "Browser to run tests (chrome/firefox/edge)"
+        required: true
+        default: "chrome"
+
+      tags:
+        description: "Cucumber tags (e.g. @smoke, @Regression)"
+        required: true
+        default: "@Regression"
+
+
+
+# =========================================================
+# GLOBAL ENVIRONMENT VARIABLES
+# These are available to all steps
+# =========================================================
+env:
+
+  # Default execution values
+  RUN_ENV: dev
+  RUN_URL: https://url
+  RUN_BROWSER: chrome
+  RUN_TAGS: "@Regression"
+
+  # -------------------------------------------------------
+  # SENSITIVE DATA FROM GITHUB SECRETS
+  # GitHub Secrets are stored in:
+  # Repo → Settings → Secrets → Actions
+  # -------------------------------------------------------
+
+  TEST_ADMIN1_EMAIL: ${{ secrets.TEST_ADMIN1_EMAILID }}
+  TEST_ADMIN1_PASS: ${{ secrets.TEST_ADMIN1_PASS }}
+
+
+
+# =========================================================
+# PERMISSIONS REQUIRED
+# contents: write → Needed to publish Allure report
+# =========================================================
+permissions:
+  contents: write
+
+
+
+# =========================================================
+# JOB DEFINITIONS
+# =========================================================
+jobs:
+
+  run-tests:
+
+    # -----------------------------------------------------
+    # Virtual machine where tests will run
+    # ubuntu-latest = Linux runner provided by GitHub
+    # -----------------------------------------------------
+    runs-on: ubuntu-latest
+
+
+    # =====================================================
+    # STEPS EXECUTED IN ORDER
+    # =====================================================
+    steps:
+
+      # ---------------------------------------------------
+      # STEP 1 — CHECKOUT CODE
+      # Downloads your repository code into runner machine
+      # ---------------------------------------------------
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      # ---------------------------------------------------
+      # STEP 2 — SETUP JAVA (Required for Selenium/Maven)
+      # ---------------------------------------------------
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+
+      # ---------------------------------------------------
+      # STEP 3 — SETUP MAVEN
+      # Maven is used to build and run tests
+      # ---------------------------------------------------
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: "3.8.2"
+
+
+      # ---------------------------------------------------
+      # STEP 4 — INSTALL CHROME BROWSER
+      # Required for Selenium tests execution
+      # ---------------------------------------------------
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+
+
+      # ---------------------------------------------------
+      # STEP 5 — RUN AUTOMATION TESTS
+      #
+      # Passing parameters to Maven:
+      # -Denv → environment
+      # -Durl → application URL
+      # -Dbrowser → browser type
+      # -Dcucumber.filter.tags → which tests to run
+      #
+      # Passing credentials securely:
+      # Secrets → env → Maven → Java code
+      #
+      # In Java you access using:
+      # System.getProperty("TEST_ADMIN1_EMAILID")
+      # ---------------------------------------------------
+      - name: Run Tests
+        run: |
+          mvn clean test \
+          -Denv="${RUN_ENV}" \
+          -Durl="${RUN_URL}" \
+          -Dbrowser="${RUN_BROWSER}" \
+          -Dcucumber.filter.tags="${RUN_TAGS}" \
+          -DTEST_ADMIN1_EMAILID="${TEST_ADMIN1_EMAIL}" \
+          -DTEST_ADMIN1_PASS="${TEST_ADMIN1_PASS}"
+
+
+      # ---------------------------------------------------
+      # STEP 6 — GENERATE ALLURE REPORT
+      # Uses Maven Allure plugin
+      # Output folder:
+      # target/site/allure-maven-plugin
+      # ---------------------------------------------------
+      - name: Generate Allure Report
+        run: mvn allure:report
+
+
+      # ---------------------------------------------------
+      # STEP 7 — UPLOAD REPORT AS ARTIFACT
+      #
+      # Artifact = downloadable file from GitHub Actions
+      # You can download and open index.html
+      # ---------------------------------------------------
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin

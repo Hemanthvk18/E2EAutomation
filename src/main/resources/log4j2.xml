@@ -1,0 +1,63 @@
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="logDirectory">logs</Property>
+        <Property name="suiteName">eCommerceCucumberAutomationTestSuite</Property>
+        <Property name="timestamp">${date: yyyy-MM-dd_HH-mm-ss}</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight{%-5level}-{ERROR=red} %X{scenarioName}-%c{1} %msg%n
+                </Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="${logDirectory}/${suiteName}_${timestamp).log"
+                     filePattern="${logDirectory}/${suiteName}_${timestamp}-%d{yyyy-MM-dd-ss}.log.gz">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %X{scenarioName} %c{1} %msg%n</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+        <!-- Specific Loggers to Suppress -->
+        <Logger name="org.asynchttpclient" level="error"/>
+        <Logger name="org.testng" level="error"/>
+        <Logger name="org.testng.internal.Utils" level="error"/>
+        <Logger name="org.testng.xml.TestNGContentHandler" level="error"/>
+        <Logger name="io.github.bonigarcia.wdm" level="error"/>
+        <Logger name="io.netty.util.internal" level="error"/>
+        <Logger name="org.apache.hc.client5.http" level="error"/>
+        <Logger name="org.asynchttpclient.netty.channel" level="error"/>
+        <Logger name="com.codoid.products.fillo" level="error"/>
+        <Logger
+                name="org.openqa.selenium.remote.http.WebSocket$Listener"
+                level="fatal">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger
+                name="org.openqa.selenium.devtools"
+                level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.openqa.selenium" level="error"/>
+        <Logger name="java.io" level="error"/>
+        <Logger name="org.openqa.selenium.devtools.CdpVersionFinder" level="error"/>
+    </Loggers>
+
+</Configuration>
