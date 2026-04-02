@@ -53,7 +53,7 @@ public class BrowserOptionsUtility {
         options.setExperimentalOption("prefs", prefs);
 
 // Optional: stabilize download UI behavior on newer Chrome
-        options.addArguments("--disable-features DownloadBubble");
+        options.addArguments("--disable-features=DownloadBubble");
         options.setExperimentalOption("prefs", prefs);
 
 
