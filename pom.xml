@@ -8,41 +8,64 @@
     <artifactId>E2EAutomation</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
+    <!-- ===================================================== -->
+    <!-- 🔹 PROJECT PROPERTIES -->
+    <!-- Defines Java version and encoding used across project -->
+    <!-- ===================================================== -->
     <properties>
+        <!-- Ensures all developers use same Java version -->
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+
+        <!-- Prevents encoding issues (especially in reports/logs) -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
 
+    <!-- ===================================================== -->
+    <!-- 🔹 BUILD PLUGINS -->
+    <!-- Handles compilation, execution, reporting lifecycle -->
+    <!-- ===================================================== -->
     <build>
         <pluginManagement>
             <plugins>
+
+                <!-- Compiles Java source code into bytecode -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.11.0</version>
                 </plugin>
 
+                <!-- Executes test cases (TestNG / Cucumber / JUnit) -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
 
+                <!-- Generates and serves Allure reports -->
                 <plugin>
                     <groupId>io.qameta.allure</groupId>
                     <artifactId>allure-maven</artifactId>
                     <version>2.12.0</version>
                 </plugin>
 
-
             </plugins>
         </pluginManagement>
     </build>
 
+
+    <!-- ===================================================== -->
+    <!-- 🔹 DEPENDENCIES -->
+    <!-- Core libraries used in automation framework -->
+    <!-- ===================================================== -->
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+
+        <!-- ================= UI AUTOMATION ================= -->
+
+        <!-- Selenium: Automates browser actions like click, sendKeys -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -50,7 +73,16 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
+        <!-- ================= BDD - CUCUMBER ================= -->
+
+        <!-- Provides step definition annotations (@Given, @When, @Then) -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.14.1</version>
+        </dependency>
+
+        <!-- Executes Cucumber tests using JUnit runner -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
@@ -58,14 +90,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java  -->
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>7.14.1</version>
-        </dependency>
-
-        <!-- Dependency Injection for Cucumber - enables Hook constructor parameter injection -->
+        <!-- Enables dependency injection between step classes (shared context) -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-picocontainer</artifactId>
@@ -73,67 +98,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.20.0</version>
-        </dependency>
 
+        <!-- ================= TEST EXECUTION ================= -->
 
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.20.0</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.2.3</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>5.2.3</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/com.aventstack/extentreports-cucumber4-adapter -->
-        <dependency>
-            <groupId>tech.grasshopper</groupId>
-            <artifactId>extentreports-cucumber7-adapter</artifactId>
-            <version>1.14.0</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-cucumber7-jvm</artifactId>
-            <version>2.29.1</version>
-        </dependency>
-
+        <!-- TestNG: Advanced execution (parallel, retry, grouping) -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -141,47 +109,126 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Allows Cucumber scenarios to run using TestNG -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-testng</artifactId>
             <version>7.17.0</version>
         </dependency>
 
+
+        <!-- ================= LOGGING ================= -->
+
+        <!-- Logging API used in code (logger.info, logger.error) -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.6.0</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.20.0</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/net.lightbody.bmp/browsermob-core -->
+        <!-- Actual logging engine implementation -->
         <dependency>
-            <groupId>net.lightbody.bmp</groupId>
-            <artifactId>browsermob-core</artifactId>
-            <version>2.1.5</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+        <!-- Bridges SLF4J logs to Log4j (used by many libraries internally) -->
         <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>6.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-devtools-v143</artifactId>
-            <version>4.39.0</version>
-            <scope>compile</scope>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.17.1</version>
         </dependency>
 
 
+        <!-- ================= REPORTING ================= -->
+
+        <!-- Extent Reports adapter for Cucumber -->
+        <dependency>
+            <groupId>tech.grasshopper</groupId>
+            <artifactId>extentreports-cucumber7-adapter</artifactId>
+            <version>1.14.0</version>
+        </dependency>
+
+        <!-- Allure integration with Cucumber -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.29.1</version>
+        </dependency>
+
+        <!-- Allure integration with TestNG -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
             <version>2.25.0</version>
         </dependency>
 
+
+        <!-- ================= DATA HANDLING ================= -->
+
+        <!-- Apache POI: Handles Excel (.xls) -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <!-- Apache POI OOXML: Handles Excel (.xlsx) -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+
+        <!-- ================= UTILITIES ================= -->
+
+        <!-- File operations (copy, delete, read/write files) -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <!-- String utilities (StringUtils, validation helpers) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+
+
+        <!-- ================= DRIVER MANAGEMENT ================= -->
+
+        <!-- Automatically downloads and manages browser drivers -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+
+
+        <!-- ================= ADVANCED AUTOMATION ================= -->
+
+        <!-- Chrome DevTools integration (network logs, console logs, performance) -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-devtools-v143</artifactId>
+            <version>4.39.0</version>
+        </dependency>
+
+        <!-- Capture network traffic (API calls, request/response validation) -->
+        <dependency>
+            <groupId>net.lightbody.bmp</groupId>
+            <artifactId>browsermob-core</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+
+
+        <!-- ================= SECURITY / OTP ================= -->
+
+        <!-- Generates OTP for automating 2FA login scenarios -->
         <dependency>
             <groupId>com.warrenstrange</groupId>
             <artifactId>googleauth</artifactId>
@@ -189,6 +236,9 @@
         </dependency>
 
 
+        <!-- ================= JSON HANDLING ================= -->
+
+        <!-- Used for parsing and creating JSON data (API validation) -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -196,22 +246,231 @@
         </dependency>
 
 
+        <!-- ================= EMAIL ================= -->
+
+        <!-- Sends automation reports via email -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.17.1</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.6.0</version>
         </dependency>
 
-        <!-- Guava dependency - required for Selenium 4.15.0 to fix NoSuchMethodError -->
+
+        <!-- ================= DEPENDENCY FIX ================= -->
+
+        <!-- Required internally by Selenium to avoid NoSuchMethodError -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
         </dependency>
 
-
-
-
     </dependencies>
 
 </project>
+
+        <!--    <properties>-->
+        <!--        <maven.compiler.source>21</maven.compiler.source>-->
+        <!--        <maven.compiler.target>21</maven.compiler.target>-->
+        <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+        <!--    </properties>-->
+
+
+        <!--    <build>-->
+        <!--        <pluginManagement>-->
+        <!--            <plugins>-->
+        <!--                <plugin>-->
+        <!--                    <groupId>org.apache.maven.plugins</groupId>-->
+        <!--                    <artifactId>maven-compiler-plugin</artifactId>-->
+        <!--                    <version>3.11.0</version>-->
+        <!--                </plugin>-->
+
+        <!--                <plugin>-->
+        <!--                    <groupId>org.apache.maven.plugins</groupId>-->
+        <!--                    <artifactId>maven-surefire-plugin</artifactId>-->
+        <!--                    <version>3.1.2</version>-->
+        <!--                </plugin>-->
+
+        <!--                <plugin>-->
+        <!--                    <groupId>io.qameta.allure</groupId>-->
+        <!--                    <artifactId>allure-maven</artifactId>-->
+        <!--                    <version>2.12.0</version>-->
+        <!--                </plugin>-->
+
+
+        <!--            </plugins>-->
+        <!--        </pluginManagement>-->
+        <!--    </build>-->
+
+        <!--    <dependencies>-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.seleniumhq.selenium</groupId>-->
+        <!--            <artifactId>selenium-java</artifactId>-->
+        <!--            <version>4.15.0</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.cucumber/cucumber-junit &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.cucumber</groupId>-->
+        <!--            <artifactId>cucumber-junit</artifactId>-->
+        <!--            <version>7.14.1</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.cucumber/cucumber-java  &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.cucumber</groupId>-->
+        <!--            <artifactId>cucumber-java</artifactId>-->
+        <!--            <version>7.14.1</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; Dependency Injection for Cucumber - enables Hook constructor parameter injection &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.cucumber</groupId>-->
+        <!--            <artifactId>cucumber-picocontainer</artifactId>-->
+        <!--            <version>7.14.1</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-core</artifactId>-->
+        <!--            <version>2.20.0</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-api</artifactId>-->
+        <!--            <version>2.20.0</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.poi</groupId>-->
+        <!--            <artifactId>poi</artifactId>-->
+        <!--            <version>5.2.3</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.poi</groupId>-->
+        <!--            <artifactId>poi-ooxml</artifactId>-->
+        <!--            <version>5.2.3</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/commons-io/commons-io &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>commons-io</groupId>-->
+        <!--            <artifactId>commons-io</artifactId>-->
+        <!--            <version>2.11.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.commons</groupId>-->
+        <!--            <artifactId>commons-lang3</artifactId>-->
+        <!--            <version>3.12.0</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.aventstack/extentreports-cucumber4-adapter &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>tech.grasshopper</groupId>-->
+        <!--            <artifactId>extentreports-cucumber7-adapter</artifactId>-->
+        <!--            <version>1.14.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.qameta.allure</groupId>-->
+        <!--            <artifactId>allure-cucumber7-jvm</artifactId>-->
+        <!--            <version>2.29.1</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.testng</groupId>-->
+        <!--            <artifactId>testng</artifactId>-->
+        <!--            <version>7.8.0</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>io.cucumber</groupId>-->
+        <!--            <artifactId>cucumber-testng</artifactId>-->
+        <!--            <version>7.17.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.commons</groupId>-->
+        <!--            <artifactId>commons-email</artifactId>-->
+        <!--            <version>1.6.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; Source: https://mvnrepository.com/artifact/net.lightbody.bmp/browsermob-core &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.lightbody.bmp</groupId>-->
+        <!--            <artifactId>browsermob-core</artifactId>-->
+        <!--            <version>2.1.5</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; Source: https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.github.bonigarcia</groupId>-->
+        <!--            <artifactId>webdrivermanager</artifactId>-->
+        <!--            <version>6.1.0</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.seleniumhq.selenium</groupId>-->
+        <!--            <artifactId>selenium-devtools-v143</artifactId>-->
+        <!--            <version>4.39.0</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>io.qameta.allure</groupId>-->
+        <!--            <artifactId>allure-testng</artifactId>-->
+        <!--            <version>2.25.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.warrenstrange</groupId>-->
+        <!--            <artifactId>googleauth</artifactId>-->
+        <!--            <version>1.5.0</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.json</groupId>-->
+        <!--            <artifactId>json</artifactId>-->
+        <!--            <version>20240303</version>-->
+        <!--        </dependency>-->
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.logging.log4j</groupId>-->
+        <!--            <artifactId>log4j-slf4j-impl</artifactId>-->
+        <!--            <version>2.17.1</version>-->
+        <!--        </dependency>-->
+
+        <!--        &lt;!&ndash; Guava dependency - required for Selenium 4.15.0 to fix NoSuchMethodError &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.google.guava</groupId>-->
+        <!--            <artifactId>guava</artifactId>-->
+        <!--            <version>33.0.0-jre</version>-->
+        <!--        </dependency>-->
+
+
+        <!--    </dependencies>-->
+
+        <!--</project>-->

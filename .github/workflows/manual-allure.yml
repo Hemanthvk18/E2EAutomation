@@ -22,6 +22,8 @@ env:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test-and-deploy:
@@ -40,29 +42,30 @@ jobs:
       - name: Install Chrome
         uses: browser-actions/setup-chrome@latest
 
-      # 🔍 DEBUG (VERY IMPORTANT - TEMPORARY)
-      - name: Debug Project Structure
-        run: ls -R
+      - name: Validate Credentials
+        run: |
+          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
+            echo "❌ ERROR: EMAIL or PASSWORD secrets not configured in GitHub!"
+            exit 1
+          fi
+          echo "✅ Credentials validated"
 
       - name: Run Tests
         run: |
+          set -e
           mvn clean test \
           -Denv="${{ github.event.inputs.env }}" \
           -Durl="${{ github.event.inputs.url }}" \
           -Dbrowser="${{ github.event.inputs.browser }}" \
           -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
           -DEMAIL="${EMAIL}" \
-          -DPASSWORD="${PASSWORD}"
+          -DPASSWORD="${PASSWORD}" \
+          -DfailIfNoTests=true
 
-      # 🔥 FIX: Tell Allure where results are located
       - name: Generate Allure Report
         run: |
-          mvn allure:report \
-          -Dallure.results.directory=E2EAutomation/allure-results
-
-      # 🔍 DEBUG (Check report generated)
-      - name: Verify Allure Report
-        run: ls -R target/site/allure-maven-plugin
+          set -e
+          mvn allure:report
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
@@ -70,4 +73,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: gh-pages
-          force_orphan: true
+          keep_files: true
+          cname: ""

@@ -10,6 +10,8 @@ env:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test-and-deploy:
@@ -23,20 +25,32 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
+      - name: Validate Credentials
+        run: |
+          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
+            echo "❌ ERROR: EMAIL or PASSWORD secrets not configured in GitHub!"
+            exit 1
+          fi
+          echo "✅ Credentials validated"
+
       - uses: browser-actions/setup-chrome@latest
 
       - name: Run Tests
         run: |
+          set -e
           mvn clean test \
           -Denv="dev" \
-          -Durl="https://url" \
+          -Durl="https://rahulshettyacademy.com/client" \
           -Dbrowser="chrome" \
           -Dcucumber.filter.tags="@Regression" \
           -DEMAIL="${EMAIL}" \
-          -DPASSWORD="${PASSWORD}"
+          -DPASSWORD="${PASSWORD}" \
+          -DfailIfNoTests=true
 
       - name: Generate Allure Report
-        run: mvn allure:report
+        run: |
+          set -e
+          mvn allure:report
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
@@ -44,4 +58,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: target/site/allure-maven-plugin
           publish_branch: gh-pages
-          keep_files: false
+          keep_files: true
+          cname: ""

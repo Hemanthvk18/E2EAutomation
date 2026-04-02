@@ -16,7 +16,7 @@ import utilities.FileUtility;
         plugin = {"pretty",
         "html:target/cucumber-reports/cucumber-pretty", "json:target/cucumber-reports/cucumber.json",
         "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm", "rerun:target/rerun.txt"},
-        tags = "@LoginPage and not @NA")
+        tags = "@SearchProduct and not @NA")
 
 public class ParallelTestNgTestRunner extends AbstractTestNGCucumberTests {
 
