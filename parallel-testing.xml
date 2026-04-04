@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Test Suite for eCommerce application" verbose="3"
-       data-provider-thread-count="8" parallel="classes" preserve-order="true">
+       data-provider-thread-count="8" parallel="methods" thread-count="8" preserve-order="false">
     <test name="Test Cases for eCommerce application">
         <classes>
             <class
