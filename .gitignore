@@ -1,0 +1,88 @@
+target/
+!target/rerun.txt
+!target/allure-results/
+!target/allure-results/**
+!target/site/
+!target/site/**
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Test Reports & Logs
+# NOTE: Removed test-output/, allure-reports/, allure-results/, logs/ to allow CI/CD generated files to be accessible
+# test-output/ - Commented out to preserve TestNG reports in CI/CD
+# allure-reports/ - Commented out to preserve Allure reports
+# allure-results/ - Commented out to preserve Allure JSON results
+# logs/ - Commented out to preserve test logs
+*.log
+
+# History & Cache
+.last-history/
+.history/
+*.tmp
+.cache/
+
+# Documentation (generated)
+ACTION_PLAN.md
+ARCHITECTURE_FLOW_DIAGRAM.md
+AT_A_GLANCE.md
+CHANGES_SUMMARY.md
+COMPLETE_REFACTORING_CHECKLIST.md
+DELIVERABLES_INDEX.md
+DOCUMENTATION_INDEX.md
+IMPLEMENTATION_CHECKLIST.md
+QUICK_REFERENCE.md
+SETUP_GUIDE.md
+BEFORE_AFTER_DETAILED_CHANGES.md
+FIX_404_ERROR_GITHUB_PAGES.md
+GITHUB_PAGES_PATHS_EXPLAINED.md
+GITHUB_SECRETS_SETUP.md
+VERIFY_SECRETS_CORRECTLY_SET.md
+GITHUB_ACTIONS_BRANCH_DEPLOYMENT.md
+ACCESS_ALLURE_REPORTS_GUIDE.md
+POM_FIX_COMPLETE_SOLUTION.md
+QUICK_REFERENCE_POM_FIX.md
+SUREFIRE_3X_CONFIGURATION_FIX.md
+SUREFIRE_FIX_COMPLETE.md
+ROOT_CAUSE_ANALYSIS.md
+WORKFLOW_FIXES_SUGGESTIONS.md
+FIX_NO_TESTS_EXECUTED_EXPLANATION.md
+
+# Reference & Old Files
+src/main/X-referance/
+src/test/java/stepdefinitions/HookOld.java
+
+### IntelliJ IDEA ###
+.idea/
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store

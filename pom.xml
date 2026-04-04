@@ -38,6 +38,29 @@
                     <version>3.11.0</version>
                 </plugin>
 
+<!--                &lt;!&ndash; Executes test cases (TestNG / Cucumber / JUnit) &ndash;&gt;-->
+<!--                <plugin>-->
+<!--                    <groupId>org.apache.maven.plugins</groupId>-->
+<!--                    <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                    <version>3.1.2</version>-->
+<!--                    <configuration>-->
+<!--                        &lt;!&ndash; Include test runner class(es) for Maven to discover &ndash;&gt;-->
+<!--                        <includes>-->
+<!--                            <include>**/testrunner/ParallelTestNgTestRunner.java</include>-->
+<!--                            <include>**/testrunner/RerunFailedTestNgRunner.java</include>-->
+<!--                        </includes>-->
+
+<!--                        &lt;!&ndash; Parallel execution configuration &ndash;&gt;-->
+<!--                        <parallel>methods</parallel>-->
+<!--                        <threadCount>4</threadCount>-->
+<!--                        <reuseForks>true</reuseForks>-->
+
+<!--                        &lt;!&ndash; JVM arguments for test execution &ndash;&gt;-->
+<!--                        <argLine>-Duser.country=US -Duser.language=en</argLine>-->
+<!--                    </configuration>-->
+<!--                </plugin>-->
+
+
                 <!-- Executes test cases (TestNG / Cucumber / JUnit) -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -47,7 +70,6 @@
                         <!-- Include test runner class(es) for Maven to discover -->
                         <includes>
                             <include>**/testrunner/ParallelTestNgTestRunner.java</include>
-                            <include>**/testrunner/RerunFailedTestNgRunner.java</include>
                         </includes>
 
                         <!-- Parallel execution configuration -->
@@ -57,6 +79,12 @@
 
                         <!-- JVM arguments for test execution -->
                         <argLine>-Duser.country=US -Duser.language=en</argLine>
+
+                        <!-- System properties for browser configuration -->
+                        <systemPropertyVariables>
+                            <browser.headless>true</browser.headless>
+                            <browser.name>${browser}</browser.name>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
 

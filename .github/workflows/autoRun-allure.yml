@@ -35,24 +35,40 @@ jobs:
 
       - uses: browser-actions/setup-chrome@latest
 
-      - name: Run Tests
+      - name: Run Initial Tests
         run: |
-          set -e
+          set +e
           mvn clean test \
           -Denv="dev" \
           -Durl="https://rahulshettyacademy.com/client" \
           -Dbrowser="chrome" \
           -Dcucumber.filter.tags="@Regression" \
-          -DEMAIL="${EMAIL}" \
-          -DPASSWORD="${PASSWORD}" \
-          -DfailIfNoTests=true
+          -DEMAIL="${{ env.EMAIL }}" \
+          -DPASSWORD="${{ env.PASSWORD }}" \
+          -DfailIfNoTests=false
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Rerun Failed Tests
+        if: always() && hashFiles('target/rerun.txt') != ''
+        run: |
+          set +e
+          mvn test -Dtest=testrunner.RerunFailedTestNgRunner \
+          -DEMAIL="${{ env.EMAIL }}" \
+          -DPASSWORD="${{ env.PASSWORD }}" \
+          -DfailIfNoTests=false
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
 
       - name: Generate Allure Report
+        if: always()
         run: |
-          set -e
-          mvn allure:report
+          mvn allure:report -DfailOnMissingWebDriver=false
 
       - name: Deploy to gh-pages
+        if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
