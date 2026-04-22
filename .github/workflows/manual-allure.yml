@@ -62,6 +62,7 @@ jobs:
           -Denv="${{ github.event.inputs.env }}" \
           -Durl="${{ github.event.inputs.url }}" \
           -Dbrowser="${{ github.event.inputs.browser }}" \
+          -Dheadless=true \
           -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
           -DEMAIL="${{ env.EMAIL }}" \
           -DPASSWORD="${{ env.PASSWORD }}"
@@ -81,22 +82,49 @@ jobs:
 
       # ✅ Generate report ONLY if results exist
       - name: Generate Allure Report
-        if: always() && hashFiles('target/allure-results/**') != ''
-        run: mvn allure:report
+        if: always() && hashFiles('allure-results/**') != ''
+        run: |
+          mvn allure:report \
+          -Dallure.results.directory=allure-results
+#      - name: Generate Allure Report
+#        if: always() && hashFiles('target/allure-results/**') != ''
+#        run: mvn allure:report
 
-      # ✅ Upload reports (backup)
-      - name: Upload Surefire Reports
+      - name: Check target folder
+        run: |
+          echo "Checking target folder..."
+          ls -R target || echo "❌ target folder not found"
+
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reports
-          path: target/
+          name: test-reports
+          path: |
+            target/surefire-reports/
+            target/allure-results/
+          if-no-files-found: warn
+
+#      # ✅ Upload reports (backup)
+#      - name: Upload Surefire Reports
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: reports
+#          path: target/
 
       # ✅ Deploy
       - name: Deploy to gh-pages
-        if: always() && hashFiles('target/site/allure-maven-plugin/**') != ''
+        if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: target/site/allure-maven-plugin
+          publish_dir: allure-reports
           publish_branch: gh-pages
+#      - name: Deploy to gh-pages
+#        if: always() && hashFiles('target/site/allure-maven-plugin/**') != ''
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: target/site/allure-maven-plugin
+#          publish_branch: gh-pages

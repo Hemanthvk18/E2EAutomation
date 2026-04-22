@@ -17,57 +17,80 @@ public class BrowserOptionsUtility {
             "--force-device-scale-factor=1", "--disable-notifications", "--remote-allow-origins=*"};
     static String downloadDir = FileConstants.DOWNLOAD_DIRECTORY;
 
+
     public static ChromeOptions getChromeOptions(String headless) {
         ChromeOptions options = new ChromeOptions();
+
         for (String arg : COMMON_OPTIONS) {
             options.addArguments(arg);
         }
 
-        options.addArguments("--disable-features=NetworkService");
-        options.addArguments("--disable-popup-blocking");
-        options.addArguments("--log-level=3");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-        options.setAcceptInsecureCerts(true);
-        options.addArguments("--ignore-certificate-errors");
-        options.addArguments("--allow-insecure-localhost");
-// Set Chrome Preferences
 
-        HashMap<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", downloadDir); // absolute path
-        prefs.put("download.prompt_for_download", false);
-        prefs.put("download.directory_upgrade", true);
-        prefs.put("plugins.always_open_pdf_externally", true); // <- change to true
-        prefs.put("safebrowsing.enabled", true);
-
-// Improve automatic downloads
-        prefs.put("profile.default_content_setting_values.automatic downloads", 1);
-        prefs.put("profile.content_settings.exceptions.automatic downloads.*.setting", 1);
-
-// Don't open after download (Chrome honors this; doesn't stop Save As dialogs though)
-        prefs.put("download.open_after_download", false);
-
-// Optional (internal/lab env only): relax download protection
-// prefs.put("safebrowsing.disable_download_protection", true);
-        options.setExperimentalOption("prefs", prefs);
-
-// Optional: stabilize download UI behavior on newer Chrome
-        options.addArguments("--disable-features=DownloadBubble");
-        options.setExperimentalOption("prefs", prefs);
-
-
-// Headless mode configuration
-
-        if ("true".equalsIgnoreCase(headless.trim())) {
+        // ✅ SAFE HEADLESS CHECK
+        if (headless != null && headless.equalsIgnoreCase("true")) {
             logger.info("Running in headless mode.");
             options.addArguments("--headless=new");
-
         } else {
-            logger.info("Headless mode is set to False. Running with Broswer GUI");
+            logger.info("Running in normal mode.");
         }
+
         return options;
     }
+
+//    public static ChromeOptions getChromeOptions(String headless) {
+//        ChromeOptions options = new ChromeOptions();
+//        for (String arg : COMMON_OPTIONS) {
+//            options.addArguments(arg);
+//        }
+//
+//        options.addArguments("--disable-features=NetworkService");
+//        options.addArguments("--disable-popup-blocking");
+//        options.addArguments("--log-level=3");
+//        options.addArguments("--disable-gpu");
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--disable-dev-shm-usage");
+//        options.setAcceptInsecureCerts(true);
+//        options.addArguments("--ignore-certificate-errors");
+//        options.addArguments("--allow-insecure-localhost");
+//// Set Chrome Preferences
+//
+//        HashMap<String, Object> prefs = new HashMap<>();
+//        prefs.put("download.default_directory", downloadDir); // absolute path
+//        prefs.put("download.prompt_for_download", false);
+//        prefs.put("download.directory_upgrade", true);
+//        prefs.put("plugins.always_open_pdf_externally", true); // <- change to true
+//        prefs.put("safebrowsing.enabled", true);
+//
+//// Improve automatic downloads
+//        prefs.put("profile.default_content_setting_values.automatic downloads", 1);
+//        prefs.put("profile.content_settings.exceptions.automatic downloads.*.setting", 1);
+//
+//// Don't open after download (Chrome honors this; doesn't stop Save As dialogs though)
+//        prefs.put("download.open_after_download", false);
+//
+//// Optional (internal/lab env only): relax download protection
+//// prefs.put("safebrowsing.disable_download_protection", true);
+//        options.setExperimentalOption("prefs", prefs);
+//
+//// Optional: stabilize download UI behavior on newer Chrome
+//        options.addArguments("--disable-features=DownloadBubble");
+//        options.setExperimentalOption("prefs", prefs);
+//
+//
+//// Headless mode configuration
+//
+//        if ("true".equalsIgnoreCase(headless.trim())) {
+//            logger.info("Running in headless mode.");
+//            options.addArguments("--headless=new");
+//
+//        } else {
+//            logger.info("Headless mode is set to False. Running with Broswer GUI");
+//        }
+//        return options;
+//    }
 
 
     public static FirefoxOptions getFirefoxOptions(String headless, Proxy seleniumProxy) {

@@ -37,7 +37,7 @@ public class HomePage {
 
     public boolean validateSearchedProduct(String productName) {
         //changes made h5
-        String xpath = "//h10[contains(normalize-space(.),'" + productName + "')]";
+        String xpath = "//h5[contains(normalize-space(.),'" + productName + "')]";
         WebElement searchedProduct = context.getCustomWait().waitForElementToBeVisible(By.xpath(xpath), "Searched product: " + productName);
         return context.getCustomActions().checkElementDisplayed(searchedProduct, "Searched product: " + productName);
     }

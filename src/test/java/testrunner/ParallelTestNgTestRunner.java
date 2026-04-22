@@ -31,6 +31,8 @@ public class ParallelTestNgTestRunner extends AbstractTestNGCucumberTests {
     @BeforeSuite
     public void beforeSuite() throws Exception {
         FileUtility.cleanUpFolder("allure-results");
+//        FileUtility.cleanUpFolder("target/allure-results");
+        System.out.println("Allure results cleaned...");
     }
 }
 
