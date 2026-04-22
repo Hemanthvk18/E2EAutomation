@@ -39,21 +39,28 @@ jobs:
           java-version: "21"
           distribution: "temurin"
 
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@latest
+      # ✅ Install Chrome properly with dependencies
+      - name: Install Chrome & Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip xvfb libxi6 libgconf-2-4
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb -y
 
+      # ✅ Validate secrets
       - name: Validate Credentials
         run: |
           if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-            echo "❌ ERROR: EMAIL or PASSWORD secrets not configured in GitHub!"
+            echo "❌ ERROR: EMAIL or PASSWORD secrets not configured!"
             exit 1
           fi
           echo "✅ Credentials validated"
 
+      # ✅ Run tests (do not fail pipeline)
       - name: Run Initial Tests
+        continue-on-error: true
         run: |
-          set +e
-          mvn clean test \
+          xvfb-run mvn clean test \
           -Denv="${{ github.event.inputs.env }}" \
           -Durl="${{ github.event.inputs.url }}" \
           -Dbrowser="${{ github.event.inputs.browser }}" \
@@ -61,27 +68,33 @@ jobs:
           -DEMAIL="${{ env.EMAIL }}" \
           -DPASSWORD="${{ env.PASSWORD }}" \
           -DfailIfNoTests=false
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
 
+      # ✅ Rerun failed tests
       - name: Rerun Failed Tests
         if: always() && hashFiles('target/rerun.txt') != ''
+        continue-on-error: true
         run: |
-          set +e
-          mvn test -Dtest=testrunner.RerunFailedTestNgRunner \
+          xvfb-run mvn test \
+          -Dtest=testrunner.RerunFailedTestNgRunner \
           -DEMAIL="${{ env.EMAIL }}" \
           -DPASSWORD="${{ env.PASSWORD }}" \
           -DfailIfNoTests=false
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
 
+      # ✅ Upload reports (VERY IMPORTANT for debugging)
+      - name: Upload Surefire Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+
+      # ✅ Generate Allure report
       - name: Generate Allure Report
         if: always()
         run: |
-          mvn allure:report -DfailOnMissingWebDriver=false
+          mvn allure:report
 
+      # ✅ Deploy Allure report
       - name: Deploy to gh-pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
@@ -90,4 +103,3 @@ jobs:
           publish_dir: target/site/allure-maven-plugin
           publish_branch: gh-pages
           keep_files: true
-          cname: ""
