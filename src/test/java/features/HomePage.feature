@@ -15,10 +15,10 @@ Feature: Product Search After Admin Login
     # Prerequisites: Admin is already logged in (via Hook @Before)
   Rule: This scenario tests product search functionality
     @SearchProduct @Smoke
-    Scenario Outline: Admin can search for products after login
-      When admin searches for "<Product Name>" in product filter
-      Then admin should see the search results for "<Product Name>" in homepage
-      And admin should see the following action buttons for each product as "<Product Name>"
+    Scenario Outline: user can search for products after login
+      When user searches for "<Product Name>" in product filter
+      Then user should see the search results for "<Product Name>" in homepage
+      And user should see the following action buttons for each product as "<Product Name>"
         | View        |
         | Add To Cart |
 

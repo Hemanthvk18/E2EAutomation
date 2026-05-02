@@ -8,6 +8,10 @@ public class FileConstants {
 
     private static final Path PROJECT_ROOT = Paths.get(System.getProperty("user.dir"));
 
+    public static final String INPUT_DATA = PROJECT_ROOT
+            .resolve(Paths.get("src", "test", "resources", "test-data"))
+            .toString() + File.separator;
+
     public static final String DOWNLOAD_DIRECTORY = PROJECT_ROOT
             .resolve(Paths.get("src", "test", "resources", "downloads"))
             .toString() + File.separator;

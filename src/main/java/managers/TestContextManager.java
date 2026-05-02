@@ -160,24 +160,30 @@ public class TestContextManager {
         this.currentTimeout = currentTimeout;
     }
 
-    public String getInputDataExcelPath(String moduleName) {
-        String env = ConfigReader.getConfigReader().getProperty("env");
-        String excelPath = "";
-        switch (env.toLowerCase()) {
-            case "dev":
-                excelPath = FileConstants.INPUT_DATA_DEV + moduleName + "_Data.xlsx";
-                break;
-            case "int":
-                excelPath = FileConstants.INPUT_DATA_DEV + moduleName + "_Data.xlsx";
-                break;
-            case "stg":
-                excelPath = FileConstants.INPUT_DATA_STG + moduleName + "_Data.xlsx";
-                break;
-        }
+//    public String getInputDataExcelPath(String moduleName) {
+//        String env = ConfigReader.getConfigReader().getProperty("env");
+//        String excelPath = "";
+//        switch (env.toLowerCase()) {
+//            case "dev":
+//                excelPath = FileConstants.INPUT_DATA_DEV + moduleName + "_Data.xlsx";
+//                break;
+//            case "int":
+//                excelPath = FileConstants.INPUT_DATA_DEV + moduleName + "_Data.xlsx";
+//                break;
+//            case "stg":
+//                excelPath = FileConstants.INPUT_DATA_STG + moduleName + "_Data.xlsx";
+//                break;
+//        }
+//
+//        return excelPath;
+//
+//    }
 
-        return excelPath;
+    public String getInputDataExcelPath(String moduleName) {
+        return FileConstants.INPUT_DATA + moduleName + "_Data.xlsx";
 
     }
+
 
     public NetworkCaptureUtil getNetworkCaptureUtil() {
         return networkCaptureUtil;

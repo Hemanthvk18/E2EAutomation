@@ -87,7 +87,7 @@ public class ExcelUtility {
             throw new IllegalArgumentException("Filter Column, Filter Value and Index Column Name cannot be null.");
 
         }
-        logger.info("Reading data from sheet {} in excel{} with filter {}={} that has the {} as the {} of {}.",
+        logger.info("Reading data from sheet {} in excel {} with filter {}={} that has the {} as the {} of {}.",
                 sheetNameInput, excelFilePath, filterColumnName, filterColumnValue, columnNameOfIndexColumn, columnNameOfIndexColumn, filterColumnName);
 
         try (Workbook workbook = openWorkbook(excelFilePath)) {
@@ -98,10 +98,10 @@ public class ExcelUtility {
             Map<String, Integer> headerColumnIndexMap = getColumnIndexMap(sheet, headerRowStartIndex);
             // check if the filterColumn exists
             if (!headerColumnIndexMap.containsKey(filterColumnName.trim())
-                    || headerColumnIndexMap.containsKey(columnNameOfIndexColumn)) {
+                    || !headerColumnIndexMap.containsKey(columnNameOfIndexColumn)) {
 //            throw new IllegalArgumentException("Filter Column" + filterColumnName+"' or " +"Index Column" + filterColumnName + "does not exist in the sheet.");
-                logger.warn("Filter Column '" + filterColumnName + "' or" + "Index Column '" + filterColumnName +
-                        "'" + "does not exist in the sheet.");
+                logger.warn("Filter Column '" + filterColumnName + "' or " + "Index Column '" + filterColumnName +
+                        "'" + " does not exist in the sheet.");
             }
             Integer filterColumnIndex = headerColumnIndexMap.get(filterColumnName.trim());
             Integer indexColumnIndex = headerColumnIndexMap.get(columnNameOfIndexColumn);
@@ -115,8 +115,6 @@ public class ExcelUtility {
                     logger.info("Skipping empty row at Index:{} in Sheet:{}.", rowIndex, sheetNameInput);
                     continue;
                 }
-
-
                 String currentFilterColumnCellValue = getCellValue(row, filterColumnIndex);
                 String currentIndexCellValue = getCellValue(row, indexColumnIndex);
 
@@ -130,7 +128,6 @@ public class ExcelUtility {
                 }
 
                 // Step 2 collect rows with matching index
-
                 if (collectRows && matchingIndexCellValue != null && currentIndexCellValue != null
                         && currentIndexCellValue.equalsIgnoreCase(matchingIndexCellValue)) {
                     Map<String, String> rowDataMap = new LinkedHashMap<String, String>();

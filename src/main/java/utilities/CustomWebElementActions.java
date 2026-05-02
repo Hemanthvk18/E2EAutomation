@@ -2421,6 +2421,16 @@ public class CustomWebElementActions {
         logger.info("Pressed Enter key in {}.", elementName);
         return true;
     }
+
+    public void waitForAlertMessageToDisappear(String alertText) {
+        By alertMessage = By.xpath(
+                "//*[contains(translate(normalize-space(text()), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '"
+                        + alertText.toLowerCase() + "')]");
+        boolean disappeared =customWait.waitForElementToBeInvisible(alertMessage, "Alert message", 5);
+        if(!disappeared){
+            logger.warn("Alert message with text {} did not disappear within the expected time.", alertText);
+        }
+    }
 }
 
 

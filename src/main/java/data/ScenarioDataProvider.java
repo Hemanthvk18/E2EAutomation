@@ -24,7 +24,12 @@ public class ScenarioDataProvider {
             try {
                 String excelPath = context.getInputDataExcelPath(moduleName);
                 List<Map<String, String>> data =
-                        ExcelUtility.readInputDataFromExcelSheetWithFilter(excelPath, sheetName, "Scenario Name", context.getScenarioName(), 0,
+                        ExcelUtility.readInputDataFromExcelSheetWithFilter(
+                                excelPath,
+                                sheetName,
+                                "Scenario Name",
+                                context.getScenarioName(),
+                                0,
                                 "Index"
                         );
                 if (data == null || data.isEmpty()) {

@@ -25,6 +25,28 @@ public class HomePage {
     @FindBy(xpath = "//section//input[@placeholder='search']")
     WebElement filterSearch;
 
+    @FindBy(xpath = "//*[@role='alert' and contains(normalize-space(),'Product Added To Cart')]")
+    WebElement productAddedAlert;
+
+    @FindBy(xpath = "//ul//button[contains(normalize-space(),'Cart')]")
+    WebElement cartButton;
+
+    public WebElement getCartButtonWebElement() {
+        return cartButton;
+    }
+
+    public boolean checkProductAddedAlertVisible() {
+        return context.getCustomActions().checkElementDisplayed(productAddedAlert, "Product Added To Cart alert");
+    }
+
+    public void waitForProductAddedAlertToDisappear() {
+        context.getCustomActions().waitForAlertMessageToDisappear("Product Added To Cart alert");
+    }
+
+    public WebElement addToCartButtonForProduct(String productName) {
+        String xpath = "//h5[contains(normalize-space(.),'" + productName + "')]//following-sibling::button[contains(normalize-space(.),'Add To Cart')]";
+        return context.getCustomWait().waitForElementToBeClickable(By.xpath(xpath), "Add to Cart button for product: " + productName);
+    }
 
     public boolean checkHomeVisible() {
         return context.getCustomActions().checkElementDisplayed(homepage, "Home page");
