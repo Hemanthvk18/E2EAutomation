@@ -373,7 +373,7 @@ public class CustomWebElementActions {
 
     public boolean isElementPresent(By locator) {
         try {
-            return driver.findElements(locator).isEmpty();
+            return !driver.findElements(locator).isEmpty();
         } catch (Exception e) {
             return false;
         }

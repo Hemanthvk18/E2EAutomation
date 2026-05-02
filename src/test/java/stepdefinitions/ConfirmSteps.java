@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import pages.ConfirmPage;
 import pages.HomePage;
+import utilities.AllureUtility;
 
 public class ConfirmSteps {
     private static final Logger logger = LoggerFactory.getLogger(ConfirmSteps.class);
@@ -34,5 +35,6 @@ public class ConfirmSteps {
         String orderNumber = confirmPage.getOrderNumber();
         context.put(productName + "_orderNumber", orderNumber);
         logger.info("Order number for {}: {}", productName, context.get(productName + "_orderNumber"));
+        AllureUtility.addSubStepForData("Order Number", productName + "_orderNumber", orderNumber);
     }
 }

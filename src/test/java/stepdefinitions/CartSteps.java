@@ -40,8 +40,6 @@ public class CartSteps extends BaseSteps {
 
     @And("user navigates to {string} page")
     public void userNavigatesToCartPage(String pageName) {
-        //Click on cart button
-        context.getCustomActions().customClick(homePage.getCartButtonWebElement(), "Cart button in header");
         //verify url
         String expectedUrl = ConfigReader.getConfigReader().getUrl() + "/#/dashboard/" + pageName.toLowerCase();
         context.getWebdriverWait().until(ExpectedConditions.urlContains(expectedUrl));
@@ -83,7 +81,7 @@ public class CartSteps extends BaseSteps {
     public void userShouldSeeTheCorrectInCartPage(String productName) {
         List<String> ProductNames = Arrays.stream(productName.split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
         for (String product : ProductNames) {
-            Assert.assertTrue(cartPage.verifyProductsPresence(product), "Product not present in cart page, Product Name : " + product);
+            Assert.assertTrue(cartPage.verifyProductsPresence(product.trim()), "Product not present in cart page, Product Name : " + product);
         }
     }
 

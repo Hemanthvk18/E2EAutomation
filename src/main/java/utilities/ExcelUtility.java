@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class ExcelUtility {
@@ -198,7 +199,7 @@ public class ExcelUtility {
             String columnName = entry.getKey();
             Integer columnIndex = entry.getValue();
             String cellValue = getCellValue(row, columnIndex);
-            if (cellValue != null && (cellValue.isEmpty())) {
+            if (cellValue != null && !(cellValue.isEmpty())) {
                 rowData.put(columnName, cellValue.trim());
             }
 
@@ -286,7 +287,7 @@ public class ExcelUtility {
         try (Workbook workbook = openWorkbook(excelFilePath)) {
             Sheet sheet = workbook.getSheet(sheetName);
             Map<String, Integer> columnIndexMap = getColumnIndexMap(sheet, 0);
-            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+            for (int i = 1; i <= sheet.getPhysicalNumberOfRows(); i++) {
                 Row row = sheet.getRow(i);
                 if (row != null) {
                     Cell cell = row.getCell(columnIndexMap.get(columnName));
@@ -314,29 +315,37 @@ public class ExcelUtility {
     }
 
 
-    public static List<Map<String, String>> readExportFile(Path file) {
-        return readExportFile(file, null);
+    public static List<Map<String, String>> readExportFile(String filePath) {
+        return readExportFile(filePath, null);
     }
 
-    public static List<Map<String, String>> readExportFile(Path file, String sheetNameOrNull) {
+    public static List<Map<String, String>> readExportFile(String filePath, String sheetNameOrNull) {
+       if(filePath == null || filePath.isBlank()) {
+           throw new IllegalArgumentException("File path cannot be null or blank.");
+       }
+
+       Path file= Paths.get(filePath);
         String name = file.getFileName().toString().toLowerCase(Locale.ROOT);
         if (name.endsWith(".xlsx")) {
-            return readXlsxToMaps(file, sheetNameOrNull);
+            return readXlsxToMaps(filePath, sheetNameOrNull);
         } else if (name.endsWith(".xls")) {
             // If you ever export legacy xls; otherwise you may remove this branch.
-            return readXlsxToMaps(file, sheetNameOrNull);
+            return readXlsxToMaps(filePath, sheetNameOrNull);
         }
         throw new IllegalArgumentException("Unsupported export type: " + file);
     }
 
-    private static List<Map<String, String>> readXlsxToMaps(Path file, String sheetNameOrNull) {
+    private static List<Map<String, String>> readXlsxToMaps(String filePath, String sheetNameOrNull) {
         List<Map<String, String>> out = new ArrayList<>();
-        try (FileInputStream fis = new FileInputStream(file.toFile());
+        try (FileInputStream fis = new FileInputStream(filePath);
              Workbook wb = WorkbookFactory.create(fis)) {
+
             Sheet sheet = (sheetNameOrNull == null || sheetNameOrNull.isBlank())
                     ? wb.getSheetAt(0)
                     : wb.getSheet(sheetNameOrNull);
+
             if (sheet == null) throw new IllegalArgumentException("Sheet not found: " + sheetNameOrNull);
+
             int firstRow = sheet.getFirstRowNum();
             Row headerRow = sheet.getRow(firstRow);
             if (headerRow == null) throw new IllegalStateException("Header row missing at row" + firstRow);
@@ -346,7 +355,7 @@ public class ExcelUtility {
                 headers.add(normalize(cellToString(headerRow.getCell(c))));
             }
 
-            for (int r = firstRow + 1; r < sheet.getLastRowNum(); r++) {
+            for (int r = firstRow + 1; r <= sheet.getLastRowNum(); r++) {
                 Row row = sheet.getRow(r);
                 if (row == null) continue;
 
@@ -361,15 +370,15 @@ public class ExcelUtility {
             return out;
 
         } catch (Exception e) {
-            logger.error("Error reading .xlsx export: {}", file, e);
-            throw new RuntimeException("Failed to read Excel export: " + file + " - " + e.getMessage(), e);
+            logger.error("Error reading .xlsx export: {}", filePath, e);
+            throw new RuntimeException("Failed to read Excel export: " + filePath + " - " + e.getMessage(), e);
 
         }
     }
 
-    private static List<Map<String, String>> readXlsToMaps(Path file, String sheetNameOrNull) {
+    private static List<Map<String, String>> readXlsToMaps(String filePath, String sheetNameOrNull) {
 // This is identical to readXLsxToMaps, but kept separate for clarity.
-        return readXlsxToMaps(file, sheetNameOrNull);
+        return readXlsxToMaps(filePath, sheetNameOrNull);
     }
 
     private static String cellToString(Cell cell) {
@@ -491,7 +500,9 @@ public class ExcelUtility {
 
         if (rows.isEmpty()) {
             throw new NoSuchElementException(
-                    "No rows found for " + filterColumnName + "=" + filterColumnValue + " and " + indexColumnName + "=" + indexValue + "in sheet" + sheetName + "'");
+                    "No rows found for " + filterColumnName + "=" + filterColumnValue
+                            + " and " + indexColumnName + "=" + indexValue
+                            + " in sheet '" + sheetName + "'");
         }
         return rows;
     }

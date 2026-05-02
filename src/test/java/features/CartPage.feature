@@ -13,5 +13,5 @@ Feature: Product Search After Admin Login
       Examples:
         | Product Name    | Product Details     |
         | ADIDAS ORIGINAL | Price, Availability |
-#        | ZARA COAT 3     | Price, Availability |
-#        | iphone 13 pro   | Price, Availability |
+        | ZARA COAT 3     | Price, Availability |
+        | iphone 13 pro   | Price, Availability |

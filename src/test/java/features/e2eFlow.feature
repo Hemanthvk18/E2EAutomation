@@ -5,17 +5,18 @@ Feature: Product Search After Admin Login
     Given admin user is logged in to the application
 
   Rule:End to End process of ordering a product from homepage to confirm page
-    @orderProduct @Smoke @Regression
+    @orderProductE2E @Smoke @Regression
     Scenario Outline: Verify the user can order the product "<Product Name>" successfully from homepage to confirm page
       When user adds "<Product Name>" to cart from homepage
+      And user clicks on Cart button in homepage
       And user navigates to "cart" page
       Then user should see the correct "<Product Name>" in cart page
-      And user proceeds to checkout from cart page
+      Then user clicks "Checkout" "button" in "Cart page"
       And user navigates to "order" page
       When user selects "<Country Name>" in order page
       Then user clicks "Place Order" "a" in "Order page"
       And user navigates to "thanks" page
-      Then verify successfully order message "Thankyou for the order."
+      Then verify successfully order message "THANKYOU FOR THE ORDER."
       And save order number for "<Product Name>"
 
       Examples:

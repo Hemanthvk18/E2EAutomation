@@ -20,7 +20,7 @@ public class PaymentSteps {
 
     @When("user selects {string} in order page")
     public void userSelectsInOrderPage(String countryName) {
-        Assert.assertTrue(paymentPage.selectCountry(countryName),
+        Assert.assertTrue(paymentPage.selectCountry(countryName.trim()),
                 "Failed to select country name in cart page : " + countryName);
     }
 }

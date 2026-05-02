@@ -34,7 +34,7 @@ public class ScenarioDataProvider {
                         );
                 if (data == null || data.isEmpty()) {
                     throw new IllegalStateException(
-                            "No data rows for module='" + moduleName + "', sheet '" + sheetName +
+                            "No data rows for module='" + moduleName + "', sheet='" + sheetName +
                                     "', scenario='" + context.getScenarioName() + "', file='" + excelPath + "'.");
                 }
 

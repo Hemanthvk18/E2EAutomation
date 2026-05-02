@@ -9,7 +9,3 @@ Feature: Product Search After Admin Login
     Scenario Outline: user
 
       Examples:
-        | Product Name    | Product Details |
-        | ADIDAS ORIGINAL | Price, Quantity |
-        | ZARA COAT 3     | Price, Quantity |
-        | iphone 13 pro   | Price, Quantity |

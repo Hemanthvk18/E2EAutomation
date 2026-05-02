@@ -21,7 +21,7 @@ public class PaymentPage {
     WebElement selectCountryDropDown;
 
     public boolean selectCountry(String country){
-        context.getCustomActions().customClick(selectCountryDropDown,"Select Country");
+        context.getCustomActions().customSendKeys(selectCountryDropDown,"Select Country",country);
         String path= String.format("//section/button//span[normalize-space(.)='%s']",country.trim());
         return context.getCustomActions().customClick(By.xpath(path),"Country dropdown value :"+country);
     }
