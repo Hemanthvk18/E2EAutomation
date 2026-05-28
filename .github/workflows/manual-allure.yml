@@ -82,13 +82,8 @@ jobs:
 
       # ✅ Generate report ONLY if results exist
       - name: Generate Allure Report
-        if: always() && hashFiles('allure-results/**') != ''
-        run: |
-          mvn allure:report \
-          -Dallure.results.directory=allure-results
-#      - name: Generate Allure Report
-#        if: always() && hashFiles('target/allure-results/**') != ''
-#        run: mvn allure:report
+        if: always() && hashFiles('target/allure-results/**') != ''
+        run: mvn allure:report
 
       - name: Check target folder
         run: |
@@ -115,16 +110,9 @@ jobs:
 
       # ✅ Deploy
       - name: Deploy to gh-pages
-        if: always()
+        if: always() && hashFiles('target/site/allure-maven-plugin/**') != ''
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-reports
+          publish_dir: target/site/allure-maven-plugin
           publish_branch: gh-pages
-#      - name: Deploy to gh-pages
-#        if: always() && hashFiles('target/site/allure-maven-plugin/**') != ''
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: target/site/allure-maven-plugin
-#          publish_branch: gh-pages

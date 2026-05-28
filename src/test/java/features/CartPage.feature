@@ -1,4 +1,4 @@
-@CartPage @Regression @admin @module:CART @APILogin
+@CartPage @admin @module:CART @APILogin
 Feature: Product Search After Admin Login
 
   Background: Admin user is logged in

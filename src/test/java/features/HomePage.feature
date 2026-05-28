@@ -3,7 +3,7 @@
 # This feature tests that admin users can successfully login and search for products
 # Tags: @admin triggers admin user login in Hook, @module:HomePage loads HomePage test data
 
-@LoginPage @Regression @admin @module:HomePage
+@LoginPage @admin @module:HomePage
 Feature: Product Search After Admin Login
 
   Background: Admin user is logged in
