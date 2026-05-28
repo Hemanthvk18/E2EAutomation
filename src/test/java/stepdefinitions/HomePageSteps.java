@@ -53,4 +53,5 @@ public class HomePageSteps {
     public void userClicksOnCartButtonInHomepage() {
         context.getCustomActions().customClick(homePage.getCartButtonWebElement(), "Cart button in header");
     }
+
 }

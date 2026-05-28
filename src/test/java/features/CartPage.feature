@@ -1,4 +1,4 @@
-@CartPage @Regression @admin @module:CART
+@CartPage @Regression @admin @module:CART @APILogin
 Feature: Product Search After Admin Login
 
   Background: Admin user is logged in
@@ -8,6 +8,7 @@ Feature: Product Search After Admin Login
     @VerifyCartPageDetails @Smoke
     Scenario Outline: user can see correct product details for "<Product Name>" in cart page after adding product to cart from homepage
       When user adds "<Product Name>" to cart from homepage
+      And user clicks on Cart button in homepage
       And user navigates to "cart" page
       Then user should see the correct "<Product Details>" for "<Product Name>" in cart page from "Price Data" sheet
       Examples:

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -68,9 +69,13 @@ public class ConfigReader {
         return getProperty("url");
     }
 
+    public String getBaseUrl() {
+        return getProperty("baseUrl");
+    }
+
     public String getEmail(String userKey) {
 //        return getProperty(userKey + "_EMAILID");
-                return getProperty(userKey);
+        return getProperty(userKey);
 
     }
 
@@ -87,6 +92,16 @@ public class ConfigReader {
     public String getUserType(String userKey) {
         return getProperty(userKey + "_TYPE", "test"); // Default to test user
     }
+
+    public boolean logonFailureOnly() {
+        return Boolean.parseBoolean(prop.getProperty("logOnFailureOnly", "true"));
+    }
+
+    public Duration httpTimeout() {
+        return Duration.ofSeconds(Long.parseLong(prop.getProperty("httpTimeoutSec", "30")));
+
+    }
+
 
 }
 

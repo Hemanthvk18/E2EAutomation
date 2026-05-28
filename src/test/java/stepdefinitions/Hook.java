@@ -1,11 +1,16 @@
 package stepdefinitions;
 
+import api.client.AuthApiClient;
+import api.payloads.request.LoginRequest;
+import api.payloads.response.LoginResponse;
+import api.utils.ApiLoginUtil;
 import io.cucumber.java.*;
 import io.qameta.allure.Allure;
 import managers.DriverManager;
 import managers.PageObjectManager;
 import managers.TestContextManager;
 import org.apache.logging.log4j.ThreadContext;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -15,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import pages.LoginPage;
 import utilities.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -134,13 +136,22 @@ public class Hook {
                 new CustomWebElementActions(driver, context.getCustomWait(), context.getWebdriverWait()));
         context.setNetworkCaptureUtil(new NetworkCaptureUtil(driver));
         context.getNetworkCaptureUtil().startCapturing();
-        // Step 7: Navigate to URL
-        driver.get(url);
-        context.getCustomActions().waitForPageLoad();
-        logger.info("Loading URL for Login page:{} for scenario: {}", url, scenario.getName());
-        context.getPageObjectManager().getLoginPage().loadLoginPageWithRetry(url);
-        // Step 9: Perform login with env variables
-        performLogin(userKey, category);
+
+        // Step 7: Navigate to URL and perform login based on tags
+        if (scenario.getSourceTagNames().contains("@APILogin")) {
+            logger.info("Performing API Login for scenario: {}", scenario.getName());
+            performApiLogin();
+
+        } else {
+            // Navigate to login page only for UI login
+            driver.get(url);
+            context.getCustomActions().waitForPageLoad();
+            logger.info("Loading URL for Login page:{} for scenario: {}", url, scenario.getName());
+            context.getPageObjectManager().getLoginPage().loadLoginPageWithRetry(url);
+
+            // UI Login
+            performLogin(userKey, category);
+        }
     }
 
     private Set<String> determineCapabilities(Scenario scenario) {
@@ -179,6 +190,58 @@ public class Hook {
 
         // Default to test user
         return "test_normal";
+    }
+
+    private void performApiLogin() {
+
+        ConfigReader config = ConfigReader.getConfigReader();
+        String email = config.getEmail("EMAIL");
+        String password = config.getPass("PASSWORD");
+
+        // Create Request POJO (Java object)
+        LoginRequest request = new LoginRequest();
+        request.setUserEmail(email);
+        request.setUserPassword(password);
+
+        // Call API Client
+        AuthApiClient authApiClient = new AuthApiClient();
+        LoginResponse response = authApiClient.login(request);  // passing login request java object and getting response as java object (SERIALIZATION + DESERIALIZATION)
+
+        // Extract token from POJO response
+        String token = response.getToken();
+        String userId = response.getUserId();
+        String message = response.getMessage();
+
+        // Store in context (parallel safe)
+        context.setToken(token);
+        context.setUserId(userId);
+        logger.info("Token generated successfully");
+        logger.info("Login Message: {}",message);
+
+        // Inject token into browser
+        injectTokenAndNavigate(token);
+
+    }
+
+    private void injectTokenAndNavigate(String token) {
+
+        // Open base domain FIRST (Initialize browser session for that domain)
+        driver.get(url);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        // Inject token into Local Storage
+        js.executeScript(
+                "window.localStorage.setItem('token', arguments[0]);",
+                token
+        );
+        logger.info("Token injected successfully into local storage");
+
+        // Navigate directly to application/home page (forces application reload with token available)
+//        driver.navigate().to(url);
+        driver.navigate().refresh();
+        context.getCustomActions().waitForPageLoad();
+        logger.info("Navigated directly to Home Page after API login");
     }
 
     private void performLogin(String userKey, String category) {

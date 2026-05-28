@@ -28,12 +28,14 @@ public class TestContextManager {
     private NetworkCaptureUtil networkCaptureUtil;
     private Map<String, String> scenarioFirstRowData;
     private String userKey;
+    private String token;
     private UserType userType;
     private String userRole;
     private String category;
     private Map<String, Object> data = new HashMap<>();
     private ScenarioDataProvider provider;
     private String currentModule;
+    private String loginUserId;
 
     public TestContextManager() {
         this.currentTimeout = Duration.ofSeconds(60);
@@ -136,6 +138,14 @@ public class TestContextManager {
         this.userKey = userKey;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public UserType getUserType() {
         return userType;
     }
@@ -225,7 +235,13 @@ public class TestContextManager {
         return customWait;
     }
 
+    public String getUserId() {
+        return loginUserId;
+    }
 
+    public void setUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
+    }
 
 
 }

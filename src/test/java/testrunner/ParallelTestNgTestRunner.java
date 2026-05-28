@@ -18,12 +18,12 @@ import utilities.FileUtility;
                 "json:target/cucumber-reports/cucumber.json",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "rerun:target/rerun.txt"},
-        tags = "@VerifyCartPageDetails")
+        tags = "@may24")
 
 public class ParallelTestNgTestRunner extends AbstractTestNGCucumberTests {
 
     @Override
-    @DataProvider(parallel = true)
+    @DataProvider(parallel = false) // Set to true for parallel execution, false for sequential
     public Object[][] scenarios() {
         return super.scenarios();
     }
