@@ -26,6 +26,7 @@ public class ApiSteps {
 
     @Given("user adds product to cart using API")
     public void userAddsProductToCartUsingAPI(DataTable dataTable) throws InterruptedException {
+
         List<String> productNames = dataTable.asList();
         for(String productName:productNames) {
             Assert.assertEquals(cartService.addProductToCart(context.getToken(), context.getUserId(), productName),
