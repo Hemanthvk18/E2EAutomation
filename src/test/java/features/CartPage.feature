@@ -5,7 +5,7 @@ Feature: Product Search After Admin Login
     Given admin user is logged in to the application
 
   Rule: Verify cart page product details
-    @VerifyCartPageDetails @Smoke
+    @VerifyCartPageDetails
     Scenario Outline: user can see correct product details for "<Product Name>" in cart page after adding product to cart from homepage
       When user adds "<Product Name>" to cart from homepage
       And user clicks on Cart button in homepage

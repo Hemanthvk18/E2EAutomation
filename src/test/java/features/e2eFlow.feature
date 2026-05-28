@@ -5,7 +5,7 @@ Feature: Product Search After Admin Login
     Given admin user is logged in to the application
 
   Rule:End to End process of ordering a product from homepage to confirm page
-    @orderProductE2E @Smoke @Regression
+    @orderProductE2E
     Scenario Outline: Verify the user can order the product "<Product Name>" successfully from homepage to confirm page
       When user adds "<Product Name>" to cart from homepage
       And user clicks on Cart button in homepage
@@ -22,6 +22,6 @@ Feature: Product Search After Admin Login
       Examples:
         | Product Name                              | Country Name                   |
         | ADIDAS ORIGINAL                           | India                          |
-#        | ZARA COAT 3                               | British Indian Ocean Territory |
-#        | iphone 13 pro                             | South Africa                   |
-#        | ADIDAS ORIGINAL,ZARA COAT 3,iphone 13 pro | Australia                      |
+        | ZARA COAT 3                               | British Indian Ocean Territory |
+        | iphone 13 pro                             | South Africa                   |
+        | ADIDAS ORIGINAL,ZARA COAT 3,iphone 13 pro | Australia                      |

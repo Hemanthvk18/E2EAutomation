@@ -5,7 +5,7 @@
 #    Given admin user is logged in to the application
 #
 #  Rule: Verify
-#     @Smoke
+#
 #    Scenario Outline: user
 #
 #      Examples:

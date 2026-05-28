@@ -1,174 +1,182 @@
+name: Manual Allure Execution
 
-  name: Manual Allure Execution
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Environment"
+        required: true
+        default: "dev"
 
-  on:
-    workflow_dispatch:
-      inputs:
-        env:
-          description: "Environment"
-          required: true
-          default: "dev"
+      url:
+        description: "Application URL"
+        required: true
+        default: "https://rahulshettyacademy.com/client"
 
-        url:
-          description: "Application URL"
-          required: true
-          default: "https://rahulshettyacademy.com/client"
+      browser:
+        description: "Browser"
+        required: true
+        default: "chrome"
 
-        browser:
-          description: "Browser"
-          required: true
-          default: "chrome"
+      tags:
+        description: "Cucumber Tags"
+        required: true
+        default: "@Regression"
 
-        tags:
-          description: "Cucumber Tags"
-          required: true
-          default: "@Regression"
+env:
+  EMAIL: ${{ secrets.EMAIL }}
+  PASSWORD: ${{ secrets.PASSWORD }}
 
-  env:
-    EMAIL: ${{ secrets.EMAIL }}
-    PASSWORD: ${{ secrets.PASSWORD }}
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
-  permissions:
-    contents: write
-    pages: write
-    id-token: write
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
 
-  jobs:
-    test-and-deploy:
-      runs-on: ubuntu-latest
+    steps:
 
-      steps:
+      # =========================
+      # Checkout Project
+      # =========================
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        # =========================
-        # Checkout Project
-        # =========================
-        - name: Checkout code
-          uses: actions/checkout@v4
+      # =========================
+      # Setup Java
+      # =========================
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
 
-        # =========================
-        # Setup Java
-        # =========================
-        - name: Set up JDK
-          uses: actions/setup-java@v4
-          with:
-            distribution: temurin
-            java-version: "21"
+      # =========================
+      # Verify Chrome
+      # =========================
+      - name: Verify Chrome
+        run: google-chrome --version
 
-        # =========================
-        # Verify Chrome
-        # =========================
-        - name: Verify Chrome
-          run: google-chrome --version
+      # =========================
+      # Validate Secrets
+      # =========================
+      - name: Validate Credentials
+        run: |
+          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
+            echo "❌ EMAIL or PASSWORD secret missing"
+            exit 1
+          fi
 
-        # =========================
-        # Validate Secrets
-        # =========================
-        - name: Validate Credentials
-          run: |
-            if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-              echo "❌ EMAIL or PASSWORD secret missing"
-              exit 1
-            fi
+      # =========================
+      # Clean Old Reports
+      # =========================
+      - name: Clean old reports
+        run: |
+          rm -rf target
+          mkdir -p target/allure-results
 
-        # =========================
-        # Clean Old Reports
-        # =========================
-        - name: Clean old reports
-          run: |
-            rm -rf target
-            mkdir -p target/allure-results
+      # =========================
+      # Run Main Tests
+      # =========================
+      - name: Run Initial Tests
+        continue-on-error: true
+        run: |
+          xvfb-run mvn clean test \
+          -Denv="${{ github.event.inputs.env }}" \
+          -Durl="${{ github.event.inputs.url }}" \
+          -Dbrowser="${{ github.event.inputs.browser }}" \
+          -Dheadless=true \
+          -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
+          -DEMAIL="${{ env.EMAIL }}" \
+          -DPASSWORD="${{ env.PASSWORD }}"
 
-        # =========================
-        # Run Main Tests
-        # =========================
-        - name: Run Initial Tests
-          continue-on-error: true
-          run: |
-            xvfb-run mvn clean test \
-            -Denv="${{ github.event.inputs.env }}" \
-            -Durl="${{ github.event.inputs.url }}" \
-            -Dbrowser="${{ github.event.inputs.browser }}" \
-            -Dheadless=true \
-            -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
-            -DEMAIL="${{ env.EMAIL }}" \
-            -DPASSWORD="${{ env.PASSWORD }}"
+      # =========================
+      # Rerun Failed Tests
+      # =========================
+      - name: Rerun Failed Tests
+        if: always() && hashFiles('target/rerun.txt') != ''
+        continue-on-error: true
+        run: |
+          xvfb-run mvn test \
+          -Dtest=testrunner.RerunFailedTestNgRunner
 
-        # =========================
-        # Rerun Failed Tests
-        # =========================
-        - name: Rerun Failed Tests
-          if: always() && hashFiles('target/rerun.txt') != ''
-          continue-on-error: true
-          run: |
-            xvfb-run mvn test \
-            -Dtest=testrunner.RerunFailedTestNgRunner
+      # =========================
+      # Debug Target Folder
+      # =========================
+      - name: Debug Target Folder
+        if: always()
+        run: |
+          echo "========== TARGET FOLDER =========="
+          ls -R target || echo "No target folder found"
 
-        # =========================
-        # Debug Target Folder
-        # =========================
-        - name: Debug Target Folder
-          if: always()
-          run: |
-            echo "========== TARGET FOLDER =========="
-            ls -R target || echo "No target folder found"
+      # =========================
+      # Generate Allure Report
+      # =========================
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mvn io.qameta.allure:allure-maven:report
 
-        # =========================
-        # Generate Allure Report
-        # =========================
-        - name: Generate Allure Report
-          if: always()
-          run: |
-            mvn io.qameta.allure:allure-maven:report
+      # =========================
+      # Verify Allure Report
+      # =========================
+      - name: Verify Allure Report
+        if: always()
+        run: |
+          echo "========== ALLURE REPORT =========="
+          ls -R target/site || echo "Allure report not generated"
 
-        # =========================
-        # Verify Allure Report
-        # =========================
-        - name: Verify Allure Report
-          if: always()
-          run: |
-            echo "========== ALLURE REPORT =========="
-            ls -R target/site || echo "Allure report not generated"
+      # =========================
+      # Upload Reports Artifact
+      # =========================
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            target/surefire-reports/
+            target/allure-results/
+            target/site/allure-maven-plugin/
+          if-no-files-found: warn
 
-        # =========================
-        # Upload Reports Artifact
-        # =========================
-        - name: Upload Test Reports
-          if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: test-reports
-            path: |
-              target/surefire-reports/
-              target/allure-results/
-              target/site/allure-maven-plugin/
-            if-no-files-found: warn
+#      # =========================
+#      # Deploy to GitHub Pages
+#      # =========================
+#      - name: Deploy to gh-pages
+#        if: always()
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./target/site/allure-maven-plugin
+#          publish_branch: gh-pages
 
-        # =========================
-        # Deploy to GitHub Pages
-        # =========================
-        - name: Deploy to gh-pages
-          if: always()
-          uses: peaceiris/actions-gh-pages@v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./target/site/allure-maven-plugin
-            publish_branch: gh-pages
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      # =========================
+      # Deploy Manual Report
+      # =========================
+      - name: Deploy Manual Report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/allure-maven-plugin
+          destination_dir: manual
+          publish_branch: gh-pages
+          keep_files: true
 
 
+      # =========================
+      # Add Report Link to Job Summary
+      # =========================
+      - name: Add Report Link to Job Summary
+        if: always()
+        run: |
+          echo "## ✅ Allure Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Open Latest Report" >> $GITHUB_STEP_SUMMARY
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
 
 
 
@@ -181,7 +189,23 @@
 
 
 
-  #name: Manual Allure Execution
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#name: Manual Allure Execution
 #
 #on:
 #  workflow_dispatch:
