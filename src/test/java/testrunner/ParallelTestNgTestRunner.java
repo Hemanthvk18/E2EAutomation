@@ -15,6 +15,7 @@ import utilities.FileUtility;
         monochrome = true,
         plugin = {"pretty",
                 "html:target/cucumber-reports/cucumber-pretty",
+                "html:target/cucumber-report.html",
                 "json:target/cucumber-reports/cucumber.json",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "rerun:target/rerun.txt"},
