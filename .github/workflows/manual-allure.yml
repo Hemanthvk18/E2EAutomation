@@ -166,17 +166,16 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
 
-
-      # =========================
-      # Add Report Link to Job Summary
-      # =========================
-      - name: Add Report Link to Job Summary
+     # ============================================
+     # Add Manual Report Link to Job Summary
+     # ============================================
+      - name: Add Manual Report Link
         if: always()
         run: |
-          echo "## ✅ Allure Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Manual Allure Report Generated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📊 Open Latest Report" >> $GITHUB_STEP_SUMMARY
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Open Latest Manual Report" >> $GITHUB_STEP_SUMMARY
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manual/" >> $GITHUB_STEP_SUMMARY
 
 
 

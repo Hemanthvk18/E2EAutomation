@@ -171,16 +171,16 @@ jobs:
           echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
       
 
-      # =========================
-      # Add Report Link to Job Summary
-      # =========================
-      - name: Add Report Link to Job Summary
+    # ============================================
+    # Add Monthly Report Link to Job Summary
+    # ============================================
+      - name: Add Monthly Report Link
         if: always()
         run: |
-          echo "## ✅ Allure Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Monthly Allure Report Generated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📊 Open Latest Report" >> $GITHUB_STEP_SUMMARY
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Open Latest Monthly Report" >> $GITHUB_STEP_SUMMARY
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/autoMonthly/" >> $GITHUB_STEP_SUMMARY
 
 
 
