@@ -18,7 +18,7 @@ import utilities.FileUtility;
                 "json:target/cucumber-reports/cucumber.json",
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm",
                 "rerun:target/rerun.txt"},
-        tags = "@may24")
+        tags = "@Regression")
 
 public class ParallelTestNgTestRunner extends AbstractTestNGCucumberTests {
 

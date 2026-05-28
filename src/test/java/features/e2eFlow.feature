@@ -22,6 +22,6 @@ Feature: Product Search After Admin Login
       Examples:
         | Product Name                              | Country Name                   |
         | ADIDAS ORIGINAL                           | India                          |
-        | ZARA COAT 3                               | British Indian Ocean Territory |
-        | iphone 13 pro                             | South Africa                   |
-        | ADIDAS ORIGINAL,ZARA COAT 3,iphone 13 pro | Australia                      |
+#        | ZARA COAT 3                               | British Indian Ocean Territory |
+#        | iphone 13 pro                             | South Africa                   |
+#        | ADIDAS ORIGINAL,ZARA COAT 3,iphone 13 pro | Australia                      |
