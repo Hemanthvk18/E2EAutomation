@@ -1,0 +1,2 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Thu May 28 21:02:39 UTC 2026","Thu May 28 21:02:47 UTC 2026","8601","","Validate Login Functionality","","User is logged in","","User is logged in",""
