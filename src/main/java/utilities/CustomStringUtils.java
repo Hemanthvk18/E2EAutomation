@@ -306,6 +306,28 @@ public class CustomStringUtils {
         }
         return map;
     }
+
+
+    public static List<String> convertToStringList(Object value) {
+        try {
+            if (value == null) {
+                return Collections.emptyList();
+            }
+
+            if (value instanceof List<?>) {
+                return ((List<?>) value).stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.toList());
+            }
+
+            return List.of(String.valueOf(value));
+
+        } catch (Exception e) {
+            System.err.println("Failed to convert object to List<String>: "
+                    + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
 }
 
 

@@ -28,6 +28,7 @@ public class CartService {
 
         // Get product dynamically
         Product product = productRepository.getProductByName(productName);
+        System.out.println("Product found for cart : '" + product.getProductName() + "' with ID : '" + product.get_id() + "'");
 
         // Build request
         AddToCartRequest request = new AddToCartRequest();

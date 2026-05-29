@@ -1,6 +1,7 @@
 package managers;
 
 import api.services.CartService;
+import api.services.OrderService;
 import pages.*;
 
 public class PageObjectManager {
@@ -11,6 +12,7 @@ public class PageObjectManager {
     private PaymentPage paymentPage;
     private ConfirmPage confirmPage;
     private CartService CartService;
+    private OrderService orderService;
 
     public PageObjectManager(TestContextManager context) {
         this.context = context;
@@ -37,6 +39,9 @@ public class PageObjectManager {
     }
     public CartService getCartService() {
         return (CartService == null) ? CartService = new CartService() : CartService;
+    }
+    public OrderService getOrderService() {
+        return (orderService == null) ? orderService = new OrderService() : orderService;
     }
 
 
