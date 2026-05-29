@@ -15,7 +15,7 @@ public class ProductRepository {
         Product adidas = new Product();
 
         adidas.set_id("6960eae1c941646b7a8b3ed3");
-//        adidas.setProductName("ADIDAS ORIGINAL");
+        adidas.setProductName("ADIDAS ORIGINAL");
 //        adidas.setProductCategory("electronics");
 //        adidas.setProductSubCategory("mobiles");
 //        adidas.setProductPrice(11500);
@@ -25,21 +25,21 @@ public class ProductRepository {
         Product zara = new Product();
 
         zara.set_id("6960eac0c941646b7a8b3e68");
-//        zara.setProductName("ZARA COAT 3");
+        zara.setProductName("ZARA COAT 3");
 //        zara.setProductCategory("electronics");
 //        zara.setProductSubCategory("mobiles");
 //        zara.setProductPrice(11500);
         productData.put("ZARA COAT 3", zara);
 
         // PRODUCT 3
-        Product iphone  = new Product();
+        Product iphone = new Product();
 
-        iphone .set_id("6960ea76c941646b7a8b3dd5");
-//        iphone .setProductName("iphone 13 pro");
+        iphone.set_id("6960ea76c941646b7a8b3dd5");
+        iphone.setProductName("iphone 13 pro");
 //        iphone .setProductCategory("electronics");
 //        iphone .setProductSubCategory("mobiles");
 //        iphone .setProductPrice(55000);
-        productData.put("IPHONE 13 PRO", iphone);
+        productData.put("iphone 13 pro", iphone);
 
 
     }
