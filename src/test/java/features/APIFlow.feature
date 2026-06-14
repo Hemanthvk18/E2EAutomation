@@ -1,4 +1,4 @@
-@admin @module:API @APILogin
+@admin @module:API @APILogin @Smoke
 Feature: API Automation using RestAssured
   # Login
 # @APILogin --> if we mention this tag, Login will appends through API and we will get the token, which we can use in other API calls
