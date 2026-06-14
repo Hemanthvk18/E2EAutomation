@@ -3,29 +3,37 @@ name: Manual Allure Execution
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: "Environment"
-        required: true
-        default: "dev"
 
-      url:
-        description: "Application URL"
-        required: true
-        default: "https://rahulshettyacademy.com/client"
+    env:
+    description: "Environment"
+    required: true
+    default: "dev"
 
-      browser:
-        description: "Browser"
-        required: true
-        default: "chrome"
 
-      tags:
-        description: "Cucumber Tags"
-        required: true
-        default: "@Regression"
+    url:
+      description: "Application URL"
+      required: true
+      default: "https://rahulshettyacademy.com/client"
+
+    browser:
+      description: "Browser"
+      required: true
+      default: "chrome"
+
+    tags:
+      description: "Cucumber Tags"
+      required: true
+      default: "@Regression"
+
 
 env:
-  EMAIL: ${{ secrets.EMAIL }}
-  PASSWORD: ${{ secrets.PASSWORD }}
+  TEST_ADMIN1_EMAILID: ${{ secrets.TEST_ADMIN1_EMAILID }}
+  TEST_ADMIN2_EMAILID: ${{ secrets.TEST_ADMIN2_EMAILID }}
+  TEST_ADMIN3_EMAILID: ${{ secrets.TEST_ADMIN3_EMAILID }}
+
+  TEST_ADMIN1_PASS: ${{ secrets.TEST_ADMIN1_PASS }}
+  TEST_ADMIN2_PASS: ${{ secrets.TEST_ADMIN2_PASS }}
+  TEST_ADMIN3_PASS: ${{ secrets.TEST_ADMIN3_PASS }}
 
 permissions:
   contents: write
@@ -35,6 +43,7 @@ permissions:
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
+
 
     steps:
 
@@ -64,10 +73,17 @@ jobs:
       # =========================
       - name: Validate Credentials
         run: |
-          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-            echo "❌ EMAIL or PASSWORD secret missing"
+          if [ -z "${{ secrets.TEST_ADMIN1_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN2_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN3_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN1_PASS }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN2_PASS }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN3_PASS }}" ]; then
+            echo "❌ One or more user credentials are missing"
             exit 1
           fi
+          
+          echo "✅ Credentials validated successfully"
 
       # =========================
       # Clean Old Reports
@@ -89,8 +105,12 @@ jobs:
           -Dbrowser="${{ github.event.inputs.browser }}" \
           -Dheadless=true \
           -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
-          -DEMAIL="${{ env.EMAIL }}" \
-          -DPASSWORD="${{ env.PASSWORD }}"
+          -DTEST_ADMIN1_EMAILID="${{ env.TEST_ADMIN1_EMAILID }}" \
+          -DTEST_ADMIN2_EMAILID="${{ env.TEST_ADMIN2_EMAILID }}" \
+          -DTEST_ADMIN3_EMAILID="${{ env.TEST_ADMIN3_EMAILID }}" \
+          -DTEST_ADMIN1_PASS="${{ env.TEST_ADMIN1_PASS }}" \
+          -DTEST_ADMIN2_PASS="${{ env.TEST_ADMIN2_PASS }}" \
+          -DTEST_ADMIN3_PASS="${{ env.TEST_ADMIN3_PASS }}"
 
       # =========================
       # Rerun Failed Tests
@@ -142,17 +162,6 @@ jobs:
             target/site/allure-maven-plugin/
           if-no-files-found: warn
 
-#      # =========================
-#      # Deploy to GitHub Pages
-#      # =========================
-#      - name: Deploy to gh-pages
-#        if: always()
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./target/site/allure-maven-plugin
-#          publish_branch: gh-pages
-
       # =========================
       # Deploy Manual Report
       # =========================
@@ -166,9 +175,9 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
 
-     # ============================================
-     # Add Manual Report Link to Job Summary
-     # ============================================
+      # ============================================
+      # Add Manual Report Link to Job Summary
+      # ============================================
       - name: Add Manual Report Link
         if: always()
         run: |
@@ -176,156 +185,4 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 Open Latest Manual Report" >> $GITHUB_STEP_SUMMARY
           echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manual/" >> $GITHUB_STEP_SUMMARY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#name: Manual Allure Execution
-#
-#on:
-#  workflow_dispatch:
-#    inputs:
-#      env:
-#        required: true
-#        default: "dev"
-#      url:
-#        required: true
-#        default: "https://rahulshettyacademy.com/client"
-#      browser:
-#        required: true
-#        default: "chrome"
-#      tags:
-#        required: true
-#        default: "@Regression"
-#
-#env:
-#  EMAIL: ${{ secrets.EMAIL }}
-#  PASSWORD: ${{ secrets.PASSWORD }}
-#
-#permissions:
-#  contents: write
-#  pages: write
-#  id-token: write
-#
-#jobs:
-#  test-and-deploy:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Set up JDK
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: "21"
-#          distribution: "temurin"
-#
-#      # ✅ Chrome already available
-#      - name: Verify Chrome
-#        run: google-chrome --version
-#
-#      - name: Validate Credentials
-#        run: |
-#          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-#            echo "❌ ERROR: EMAIL or PASSWORD not set!"
-#            exit 1
-#          fi
-#
-#      # ✅ Ensure allure folder exists
-#      - name: Create Allure Results Directory
-#        run: mkdir -p target/allure-results
-#
-#      # ✅ Run tests
-#      - name: Run Initial Tests
-#        continue-on-error: true
-#        run: |
-#          xvfb-run mvn clean test \
-#          -Denv="${{ github.event.inputs.env }}" \
-#          -Durl="${{ github.event.inputs.url }}" \
-#          -Dbrowser="${{ github.event.inputs.browser }}" \
-#          -Dheadless=true \
-#          -Dcucumber.filter.tags="${{ github.event.inputs.tags }}" \
-#          -DEMAIL="${{ env.EMAIL }}" \
-#          -DPASSWORD="${{ env.PASSWORD }}"
-#
-#      # ✅ Rerun failed
-#      - name: Rerun Failed Tests
-#        if: always() && hashFiles('target/rerun.txt') != ''
-#        continue-on-error: true
-#        run: |
-#          xvfb-run mvn test \
-#          -Dtest=testrunner.RerunFailedTestNgRunner
-#
-#      # ✅ Debug folder
-#      - name: Debug Allure Results
-#        if: always()
-#        run: ls -R target
-#
-#      # ✅ Generate report ONLY if results exist
-#      - name: Generate Allure Report
-#        if: always() && hashFiles('target/allure-results/**') != ''
-#        run: mvn allure:report
-#
-#      - name: Check target folder
-#        run: |
-#          echo "Checking target folder..."
-#          ls -R target || echo "❌ target folder not found"
-#
-#      - name: Upload Test Reports
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: test-reports
-#          path: |
-#            target/surefire-reports/
-#            target/allure-results/
-#          if-no-files-found: warn
-#
-##      # ✅ Upload reports (backup)
-##      - name: Upload Surefire Reports
-##        if: always()
-##        uses: actions/upload-artifact@v4
-##        with:
-##          name: reports
-##          path: target/
-#
-#      # ✅ Deploy
-#      - name: Deploy to gh-pages
-#        if: always()
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: allure-reports
-#          publish_branch: gh-pages
-##      - name: Deploy to gh-pages
-##        if: always() && hashFiles('target/site/allure-maven-plugin/**') != ''
-##        uses: peaceiris/actions-gh-pages@v3
-##        with:
-##          github_token: ${{ secrets.GITHUB_TOKEN }}
-##          publish_dir: target/site/allure-maven-plugin
-##          publish_branch: gh-pages
+  

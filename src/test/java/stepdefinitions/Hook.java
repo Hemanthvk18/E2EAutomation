@@ -35,6 +35,7 @@ public class Hook {
     private static UserCapabilityMapper capabilityMapper;
     String url = ConfigReader.getConfigReader().getUrl();
     WebDriver driver;
+    // This indicates Dependency Injection. picocontainer will automatically inject the same instance of below that it manages for each scenario.
     private TestContextManager context;
     private DriverManager driverManager;
     private PageObjectManager pageObjectManager;
@@ -121,6 +122,7 @@ public class Hook {
         try {
             logger.info("About to initialize WebDriver for scenario: {}", scenario.getName());
             driver = driverManager.initializeDriver();
+            logger.info("{} Driver = {}", scenario.getName(), driver.hashCode());
             logger.info("WebDriver initialized successfully");
         } catch (Exception ex) {
             logger.error("CRITICAL: WebDriver initialization failed for scenario: {}. Error: {}",
@@ -140,7 +142,7 @@ public class Hook {
         // Step 7: Navigate to URL and perform login based on tags
         if (scenario.getSourceTagNames().contains("@APILogin")) {
             logger.info("Performing API Login for scenario: {}", scenario.getName());
-            performApiLogin();
+            performApiLogin(userKey, category);
 
         } else {
             // Navigate to login page only for UI login
@@ -184,7 +186,7 @@ public class Hook {
             if (!defaultCategory.isEmpty()) {
                 return defaultCategory;
             }
-            return "test admin"; // Prefer test admin if no default
+            return "test_admin"; // Prefer test admin if no default
 
         }
 
@@ -192,11 +194,14 @@ public class Hook {
         return "test_normal";
     }
 
-    private void performApiLogin() {
+    private void performApiLogin(String userKey, String category) {
 
         ConfigReader config = ConfigReader.getConfigReader();
-        String email = config.getEmail("EMAIL");
-        String password = config.getPass("PASSWORD");
+        String email = config.getEmail(userKey);
+        String password = config.getPass(userKey);
+
+        validateCredentials(userKey, email, password);
+        AllureUtility.addSubStepForData("User ID Data", "User ID", email);
 
         // Create Request POJO (Java object)
         LoginRequest request = new LoginRequest();
@@ -246,10 +251,10 @@ public class Hook {
 
     private void performLogin(String userKey, String category) {
         ConfigReader config = ConfigReader.getConfigReader();
-        String email = config.getEmail("EMAIL");
-        String password = config.getPass("PASSWORD");
+        String email = config.getEmail(userKey);
+        String password = config.getPass(userKey);
 
-//        validateCredentials(userKey, email, password);
+        validateCredentials(userKey, email, password);
         AllureUtility.addSubStepForData("User ID Data", "User ID", email);
 
         LoginPage loginPage = context.getPageObjectManager().getLoginPage();
@@ -261,9 +266,9 @@ public class Hook {
         StringBuilder sb = new StringBuilder();
         if (email == null || email.isBlank()) sb.append("email, ");
         if (password == null || password.isBlank()) sb.append("password, ");
-        if (sb.length() > 0) {
-            String missing = sb.substring(0, sb.length() - 2);
-            throw new IllegalArgumentException("Missing credentials for userKey'" + userKey + ":" + missing);
+        if (!sb.isEmpty()) {
+            String missing = sb.substring(0, sb.length() - 1);
+            throw new IllegalArgumentException("Missing credentials for userKey '" + userKey + "': " + missing);
         }
     }
 
@@ -280,7 +285,7 @@ public class Hook {
                 logger.info("Scenario passed: {}", scenario.getName());
             }
         } catch (Exception e) {
-            logger.error("Failed to capture screenshot for scenario: {}", scenario.getName(), e.getMessage());
+            logger.error("Failed to capture screenshot for scenario: {}, Exception message: {}", scenario.getName(), e.getMessage());
         } finally {
             context.resetData();
             Allure.addAttachment(context.getCustomActions().getUrl(), new ByteArrayInputStream(
@@ -289,7 +294,7 @@ public class Hook {
             if (context.getUserKey() != null && context.getUserCategory() != null) {
                 // Release user back to pool for other tests
                 userPoolManager.releaseUser(context.getUserCategory(), context.getUserKey());
-                logger.info("Released () user: {}", context.getUserCategory(), context.getUserKey());
+                logger.info("Released {} user: {}", context.getUserCategory(), context.getUserKey());
 
                 // Close browser
                 if (context.getDriver() != null) {

@@ -40,13 +40,25 @@ public class UserPoolManager {
         if (pool == null) {
             throw new IllegalArgumentException("No user pool for role: " + role);
         }
-        return pool.take();
+
+        String userKey = pool.take();  // This will block if no users are available
+
+        System.out.println(
+                Thread.currentThread().getName()
+                        + " acquired "
+                        + userKey);
+
+        return userKey;
     }
 
-    public void releaseUser(String role, String userkey) {
+    public void releaseUser(String role, String userKey) {
         BlockingQueue<String> pool = userPools.get(role.toLowerCase());
         if (pool != null) {
-            pool.add(userkey);  // Return user back to pool for reuse by other tests
+            pool.add(userKey);  // Return user back to pool for reuse by other tests
+            System.out.println(
+                    Thread.currentThread().getName()
+                            + " released "
+                            + userKey);
         }
 
     }

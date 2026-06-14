@@ -74,15 +74,11 @@ public class ConfigReader {
     }
 
     public String getEmail(String userKey) {
-//        return getProperty(userKey + "_EMAILID");
-        return getProperty(userKey);
-
+        return getProperty(userKey + "_EMAILID");
     }
 
     public String getPass(String userKey) {
-//        return getProperty(userKey + "_PASS");
-        return getProperty(userKey);
-
+        return getProperty(userKey + "_PASS");
     }
 
     public String getSecretKey(String userKey) {

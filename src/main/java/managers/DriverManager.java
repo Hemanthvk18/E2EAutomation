@@ -35,6 +35,12 @@ public class DriverManager {
     String headless = ConfigReader.getConfigReader().getProperty("headless", "true");
     private WebDriver driver;
 
+    public DriverManager() {
+        System.out.println(
+                "DriverManager Instance = "
+                        + this.hashCode());
+    }
+
     private static void applyWindowSize(WebDriver driver, String headless) {
         if (headless.equalsIgnoreCase("true")) {
             driver.manage().window().setSize(new Dimension(1920, 5000));

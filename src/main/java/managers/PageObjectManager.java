@@ -14,6 +14,7 @@ public class PageObjectManager {
     private CartService CartService;
     private OrderService orderService;
 
+    //private constructor to prevent direct instantiation
     public PageObjectManager(TestContextManager context) {
         this.context = context;
     }

@@ -9,8 +9,13 @@ on:
     - cron: "59 18 28-31 * *"
 
 env:
-  EMAIL: ${{ secrets.EMAIL }}
-  PASSWORD: ${{ secrets.PASSWORD }}
+  TEST_ADMIN1_EMAILID: ${{ secrets.TEST_ADMIN1_EMAILID }}
+  TEST_ADMIN2_EMAILID: ${{ secrets.TEST_ADMIN2_EMAILID }}
+  TEST_ADMIN3_EMAILID: ${{ secrets.TEST_ADMIN3_EMAILID }}
+
+  TEST_ADMIN1_PASS: ${{ secrets.TEST_ADMIN1_PASS }}
+  TEST_ADMIN2_PASS: ${{ secrets.TEST_ADMIN2_PASS }}
+  TEST_ADMIN3_PASS: ${{ secrets.TEST_ADMIN3_PASS }}
 
 permissions:
   contents: write
@@ -49,8 +54,13 @@ jobs:
       # ============================================
       - name: Validate Credentials
         run: |
-          if [ -z "${{ secrets.EMAIL }}" ] || [ -z "${{ secrets.PASSWORD }}" ]; then
-            echo "❌ ERROR: EMAIL or PASSWORD secrets not configured!"
+          if [ -z "${{ secrets.TEST_ADMIN1_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN2_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN3_EMAILID }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN1_PASS }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN2_PASS }}" ] || \
+             [ -z "${{ secrets.TEST_ADMIN3_PASS }}" ]; then
+            echo "❌ One or more user credentials are missing"
             exit 1
           fi
           
@@ -76,8 +86,12 @@ jobs:
           -Dbrowser="chrome" \
           -Dheadless=true \
           -Dcucumber.filter.tags="@Smoke" \
-          -DEMAIL="${{ env.EMAIL }}" \
-          -DPASSWORD="${{ env.PASSWORD }}" \
+          -DTEST_ADMIN1_EMAILID="${{ env.TEST_ADMIN1_EMAILID }}" \
+          -DTEST_ADMIN2_EMAILID="${{ env.TEST_ADMIN2_EMAILID }}" \
+          -DTEST_ADMIN3_EMAILID="${{ env.TEST_ADMIN3_EMAILID }}" \
+          -DTEST_ADMIN1_PASS="${{ env.TEST_ADMIN1_PASS }}" \
+          -DTEST_ADMIN2_PASS="${{ env.TEST_ADMIN2_PASS }}" \
+          -DTEST_ADMIN3_PASS="${{ env.TEST_ADMIN3_PASS }}" \
           -DfailIfNoTests=false
 
       # ============================================
@@ -89,8 +103,12 @@ jobs:
         run: |
           xvfb-run mvn test \
           -Dtest=testrunner.RerunFailedTestNgRunner \
-          -DEMAIL="${{ env.EMAIL }}" \
-          -DPASSWORD="${{ env.PASSWORD }}" \
+          -DTEST_ADMIN1_EMAILID="${{ env.TEST_ADMIN1_EMAILID }}" \
+          -DTEST_ADMIN2_EMAILID="${{ env.TEST_ADMIN2_EMAILID }}" \
+          -DTEST_ADMIN3_EMAILID="${{ env.TEST_ADMIN3_EMAILID }}" \
+          -DTEST_ADMIN1_PASS="${{ env.TEST_ADMIN1_PASS }}" \
+          -DTEST_ADMIN2_PASS="${{ env.TEST_ADMIN2_PASS }}" \
+          -DTEST_ADMIN3_PASS="${{ env.TEST_ADMIN3_PASS }}" \
           -DfailIfNoTests=false
 
       # ============================================
