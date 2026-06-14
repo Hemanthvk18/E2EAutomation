@@ -41,28 +41,19 @@
                     <version>3.11.0</version>
                 </plugin>
 
-                <!--                &lt;!&ndash; Executes test cases (TestNG / Cucumber / JUnit) &ndash;&gt;-->
-                <!--                <plugin>-->
-                <!--                    <groupId>org.apache.maven.plugins</groupId>-->
-                <!--                    <artifactId>maven-surefire-plugin</artifactId>-->
-                <!--                    <version>3.1.2</version>-->
-                <!--                    <configuration>-->
-                <!--                        &lt;!&ndash; Include test runner class(es) for Maven to discover &ndash;&gt;-->
-                <!--                        <includes>-->
-                <!--                            <include>**/testrunner/ParallelTestNgTestRunner.java</include>-->
-                <!--                            <include>**/testrunner/RerunFailedTestNgRunner.java</include>-->
-                <!--                        </includes>-->
-
-                <!--                        &lt;!&ndash; Parallel execution configuration &ndash;&gt;-->
-                <!--                        <parallel>methods</parallel>-->
-                <!--                        <threadCount>4</threadCount>-->
-                <!--                        <reuseForks>true</reuseForks>-->
-
-                <!--                        &lt;!&ndash; JVM arguments for test execution &ndash;&gt;-->
-                <!--                        <argLine>-Duser.country=US -Duser.language=en</argLine>-->
-                <!--                    </configuration>-->
-                <!--                </plugin>-->
-
+                <!--
+                GitHub Action
+                     ↓
+                mvn clean test
+                     ↓
+                Maven Surefire Plugin
+                     ↓
+                ParallelTestNgTestRunner
+                     ↓
+                Feature Files
+                     ↓
+                Step Definitions
+                                -->
 
                 <!-- Executes test cases (TestNG / Cucumber / JUnit) -->
                 <plugin>
@@ -75,9 +66,9 @@
                             <include>**/testrunner/ParallelTestNgTestRunner.java</include>
                         </includes>
 
-                        <!-- Parallel execution configuration -->
+                        <!-- Parallel execution configuration (Number of thread to run) -->
                         <parallel>methods</parallel>
-                        <threadCount>4</threadCount>
+                        <threadCount>3</threadCount>
                         <reuseForks>true</reuseForks>
 
                         <!-- JVM arguments for test execution -->
@@ -316,14 +307,21 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>5.4.0</version>
-<!--            <scope>test</scope>-->
+            <!--            <scope>test</scope>-->
         </dependency>
 
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>5.4.0</version>
-<!--            <scope>test</scope>-->
+            <!--            <scope>test</scope>-->
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.sikulix</groupId>
+            <artifactId>sikulixapi</artifactId>
+            <version>2.0.5</version>
         </dependency>
 
     </dependencies>

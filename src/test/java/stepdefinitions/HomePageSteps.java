@@ -6,11 +6,18 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import managers.TestContextManager;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import pages.HomePage;
+import utilities.FileConstants;
+import utilities.SikuliUtility;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class HomePageSteps {
@@ -54,4 +61,26 @@ public class HomePageSteps {
         context.getCustomActions().customClick(homePage.getCartButtonWebElement(), "Cart button in header");
     }
 
+    @Then("verify exact product image present in the homepage using sikuli")
+    public void verifyExactProductImagePresentInTheHomepageUsingSikuli(DataTable dataTable) throws IOException {
+        List<String> productImageNames = dataTable.asList(String.class);
+        Assert.assertTrue(homePage.checkProductImagesVisible(), "Product images are not visible in homepage");
+
+        //To get actual image from the webpage and save in local folder for comparison
+//        for (String imageName : productImageNames) {
+//            WebElement adidasImage = homePage.getProductImageList().get(2);
+//            File source = adidasImage.getScreenshotAs(OutputType.FILE);
+//            FileUtils.copyFile(source, new File(FileConstants.IMAGE_DIRECTORY + "/actualAdidas.png"));
+//        }
+
+
+        for (String imageName : productImageNames) {
+            String imagePath = FileConstants.IMAGE_DIRECTORY + imageName.trim() + ".png";
+            WebElement adidasImage = homePage.getProductImageList().get(0);
+
+            Assert.assertTrue(SikuliUtility.verifyImage(adidasImage, imagePath, imageName));
+//            Assert.assertTrue(SikuliUtility.verifyImage(imagePath, imageName), "Failed to verify image: " + imageName);
+        }
+
+    }
 }

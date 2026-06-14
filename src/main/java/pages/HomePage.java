@@ -9,6 +9,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 
 public class HomePage {
     private static final Logger logger = LoggerFactory.getLogger(HomePage.class);
@@ -30,6 +32,23 @@ public class HomePage {
 
     @FindBy(xpath = "//ul//button[contains(normalize-space(),'Cart')]")
     WebElement cartButton;
+
+//    @FindBy(css = ".card .card-img-top")
+//    WebElement productImages;
+
+    By productImages = By.cssSelector(".card .card-img-top");
+
+    @FindBy(xpath = "//img[@class='card-img-top']")
+    List<WebElement> productImageList;
+
+    public List<WebElement> getProductImageList() {
+        return productImageList;
+    }
+
+    public boolean checkProductImagesVisible() {
+        context.getCustomWait().waitForElementPresent(productImages, "Product images in homepage");
+        return context.getCustomActions().isElementPresent(productImages);
+    }
 
     public WebElement getCartButtonWebElement() {
         return cartButton;

@@ -49,6 +49,35 @@ public class ApiSteps {
 
             logger.info("Product added to cart successfully using API for product : {}", productName);
         }
+
+    }
+
+    @Then("user places order using API")
+    public void userPlacesOrderUsingAPI() {
+        //added products in cart
+        List<String> addedProducts = CustomStringUtils.convertToStringList(context.get("addedProducts"));
+
+        //Order products using API and validate response
+        CreateOrderResponse response = orderService.createOrder(context.getToken(), addedProducts);
+        Assert.assertEquals(
+                response.getMessage(),
+                "Order Placed Successfully");
+
+    }
+
+    @Given("user adds product to cart using API and validate the same product in UI")
+    public void userAddsProductToCartUsingAPIAndValidateTheSameProductInUI(DataTable dataTable) throws InterruptedException {
+        List<String> productNames = dataTable.asList(String.class);
+        context.put("addedProducts", productNames);
+
+        // Add products to cart using API and validate response
+        for(String productName:productNames) {
+            context.put("",productName.trim());
+            Assert.assertEquals(cartService.addProductToCart(context.getToken(), context.getUserId(), productName),
+                    "Product Added To Cart");
+
+            logger.info("Product added to cart successfully using API for product : {}", productName);
+        }
         // Navigate to cart page
         context.getDriver().navigate().to("https://rahulshettyacademy.com/client/#/dashboard/cart");
         context.getDriver().navigate().refresh(); // To ensure latest cart data is fetched, can be replaced with better wait
@@ -58,11 +87,11 @@ public class ApiSteps {
             Assert.assertTrue(cartPage.verifyProductsPresence(product.trim()), "Product not present in cart page, Product Name : " + product);
         }
         AllureUtility.captureScreenshot(context.getDriver(), "Added Products in Cart");
-
     }
 
-    @Then("user places order using API")
-    public void userPlacesOrderUsingAPI() {
+    @Then("user places order using API and validate the same order in UI")
+    public void userPlacesOrderUsingAPIAndValidateTheSameOrderInUI() {
+
         //added products in cart
         List<String> addedProducts = CustomStringUtils.convertToStringList(context.get("addedProducts"));
 
@@ -87,8 +116,6 @@ public class ApiSteps {
 //        AllureUtility.addSubStepForData("Order Number", addedProducts + "_orderNumber", orderNumber);
 
         AllureUtility.captureScreenshot(context.getDriver(), "Added Products in Cart");
-
-
 
     }
 }

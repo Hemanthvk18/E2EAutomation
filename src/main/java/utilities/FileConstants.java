@@ -16,6 +16,10 @@ public class FileConstants {
             .resolve(Paths.get("src", "test", "resources", "downloads"))
             .toString() + File.separator;
 
+    public static final String IMAGE_DIRECTORY = PROJECT_ROOT
+            .resolve(Paths.get("src", "test", "resources", "images"))
+            .toString() + File.separator;
+
     public static final String DVPR_EXPECTED_COLUMNS_EXCEL_PATH = PROJECT_ROOT
             .resolve(Paths.get("src", "test", "resources", "data-validation", "DVPRExpectedColumnData.xlsx"))
             .toString();

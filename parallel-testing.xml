@@ -7,5 +7,51 @@
             <class
                     name="testrunner.ParallelTestNgTestRunner"/>
         </classes>
-    </test><!-- Test -->
-</suite><!-- Suite -->
+    </test>
+</suite>
+
+
+        <!-- Right now not in use -->
+
+
+        <!--
+        ================================================================
+        TestNG Suite Configuration
+        ================================================================
+
+        Purpose:
+        Controls TestNG execution behavior.
+
+        Responsibilities:
+        1. Configure parallel execution.
+        2. Configure thread count.
+        3. Define execution suite.
+        4. Trigger Runner classes.
+
+        Execution Flow:
+        GitHub Actions / Jenkins
+                  ↓
+               Maven
+                  ↓
+              testng.xml
+                  ↓
+         ParallelTestNgTestRunner
+                  ↓
+             Feature Files
+
+        Key Settings:
+        parallel="methods"
+            Executes methods/scenarios in parallel.
+
+        thread-count="8"
+            Maximum 8 concurrent threads.
+
+        preserve-order="false"
+            Allows TestNG to optimize execution order.
+
+        Note:
+        testng.xml controls HOW tests execute.
+        Runner class controls WHAT tests execute.
+
+        ================================================================
+        -->
