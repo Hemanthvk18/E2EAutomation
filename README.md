@@ -8,7 +8,7 @@ A robust and scalable Automation Testing Framework built using Selenium, Cucumbe
 
 ### 🔹 Latest Manual Execution Report
 
-[View Manual Allure Report](https://Hemanthvk18.github.io/E2EAutomation/autoMonthly/)
+[View Manual Allure Report](https://Hemanthvk18.github.io/E2EAutomation/latest/)
 
 ### 🔹 Latest Automated Monthly Report
 
