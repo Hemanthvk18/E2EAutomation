@@ -1,0 +1,5 @@
+"Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
+"","Product Search After Admin Login","Verify the user can order the product ""ADIDAS ORIGINAL"" successfully from homepage to confirm page","0","0","1","0","0"
+"","Product Search After Admin Login","Verify the user can order the product ""ZARA COAT 3"" successfully from homepage to confirm page","0","0","1","0","0"
+"","Product Search After Admin Login","Verify the user can order the product ""iphone 13 pro"" successfully from homepage to confirm page","0","0","1","0","0"
+"","Product Search After Admin Login","Verify the user can order the product ""ADIDAS ORIGINAL,ZARA COAT 3,iphone 13 pro"" successfully from homepage to confirm page","0","1","0","0","0"
