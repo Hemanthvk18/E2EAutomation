@@ -3,27 +3,26 @@ name: Manual Allure Execution
 on:
   workflow_dispatch:
     inputs:
-
-    env:
-    description: "Environment"
-    required: true
-    default: "dev"
-
-
-    url:
-      description: "Application URL"
-      required: true
-      default: "https://rahulshettyacademy.com/client"
-
-    browser:
-      description: "Browser"
-      required: true
-      default: "chrome"
-
-    tags:
-      description: "Cucumber Tags"
-      required: true
-      default: "@Regression"
+      env:
+        description: "Environment to run tests on (e.g. dev, int, staging)"
+        required: true
+        default: "dev"
+      url:
+        description: "Base URL to run tests on"
+        required: true
+        default: "https://rahulshettyacademy.com/client"
+      browser:
+        description: "Browser to run tests on (chrome, firefox, edge)"
+        required: true
+        default: "chrome"
+      tags:
+        description: "Cucumber tags to run (e.g. @Smoke, @Regression)"
+        required: true
+        default: "@Regression"
+      report_dir:
+        description: "Folder name under gh-pages to publish Allure report (default: latest) (e.g. Module_Name, Page_Name and Release_Name etc.)"
+        required: false
+        default: "latest"
 
 
 env:
@@ -171,7 +170,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/allure-maven-plugin
-          destination_dir: manual
+          destination_dir: ${{ github.event.inputs.report_dir }}
           publish_branch: gh-pages
           keep_files: true
 
@@ -184,5 +183,4 @@ jobs:
           echo "## ✅ Manual Allure Report Generated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 Open Latest Manual Report" >> $GITHUB_STEP_SUMMARY
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manual/" >> $GITHUB_STEP_SUMMARY
-  
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.inputs.report_dir }}/" >> $GITHUB_STEP_SUMMARY

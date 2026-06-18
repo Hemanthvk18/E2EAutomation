@@ -8,6 +8,30 @@ on:
     # ============================================
     - cron: "59 18 28-31 * *"
 
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Environment to run tests on (e.g. dev, int, staging)"
+        required: true
+        default: "dev"
+      url:
+        description: "Base URL to run tests on"
+        required: true
+        default: "https://rahulshettyacademy.com/client"
+      browser:
+        description: "Browser to run tests on (chrome, firefox, edge)"
+        required: true
+        default: "chrome"
+      tags:
+        description: "Cucumber tags to run (e.g. @Smoke, @Regression)"
+        required: true
+        default: "@Regression"
+      report_dir:
+        description: "Folder name under gh-pages to publish Allure report (default: autoMonthly)"
+        required: false
+        default: "autoMonthly"
+
+
 env:
   TEST_ADMIN1_EMAILID: ${{ secrets.TEST_ADMIN1_EMAILID }}
   TEST_ADMIN2_EMAILID: ${{ secrets.TEST_ADMIN2_EMAILID }}
@@ -151,18 +175,6 @@ jobs:
             target/site/allure-maven-plugin/
           if-no-files-found: warn
 
-#      # ============================================
-#      # Deploy Allure Report to GitHub Pages
-#      # ============================================
-#      - name: Deploy to gh-pages
-#        if: always()
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./target/site/allure-maven-plugin
-#          publish_branch: gh-pages
-
-
       # =========================
       # Deploy Monthly Report
       # =========================
@@ -172,7 +184,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/site/allure-maven-plugin
-          destination_dir: autoMonthly
+          destination_dir: ${{ github.event.inputs.report_dir }}
           publish_branch: gh-pages
           keep_files: true
 
@@ -198,7 +210,7 @@ jobs:
           echo "## ✅ Monthly Allure Report Generated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 Open Latest Monthly Report" >> $GITHUB_STEP_SUMMARY
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/autoMonthly/" >> $GITHUB_STEP_SUMMARY
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.inputs.report_dir }}/" >> $GITHUB_STEP_SUMMARY
 
 
 
