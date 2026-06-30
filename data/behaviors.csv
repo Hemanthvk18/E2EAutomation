@@ -1,4 +1,4 @@
 "Epic","Feature","Story","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
-"","API Automation using RestAssured","Validate Place Order","0","0","1","0","0"
 "","API Automation using RestAssured","Validate Add To Cart","0","0","1","0","0"
 "","Validate Login Functionality","User is logged in","0","0","1","0","0"
+"","API Automation using RestAssured","Validate Place Order","0","0","1","0","0"
