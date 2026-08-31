@@ -1,4 +1,4 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sun Aug 30 21:43:21 UTC 2026","Sun Aug 30 21:43:41 UTC 2026","20231","","API Automation using RestAssured","","Validate Place Order","","Validate Place Order",""
-"passed","Sun Aug 30 21:43:21 UTC 2026","Sun Aug 30 21:43:35 UTC 2026","14642","","Validate Login Functionality","","User is logged in","","User is logged in",""
-"passed","Sun Aug 30 21:43:21 UTC 2026","Sun Aug 30 21:43:40 UTC 2026","19316","","API Automation using RestAssured","","Validate Add To Cart","","Validate Add To Cart",""
+"passed","Mon Aug 31 23:03:56 UTC 2026","Mon Aug 31 23:04:46 UTC 2026","49604","","API Automation using RestAssured","","Validate Add To Cart","","Validate Add To Cart",""
+"passed","Mon Aug 31 23:03:56 UTC 2026","Mon Aug 31 23:04:22 UTC 2026","26100","","Validate Login Functionality","","User is logged in","","User is logged in",""
+"passed","Mon Aug 31 23:03:56 UTC 2026","Mon Aug 31 23:04:46 UTC 2026","50256","","API Automation using RestAssured","","Validate Place Order","","Validate Place Order",""
