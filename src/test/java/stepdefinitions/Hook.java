@@ -1,9 +1,13 @@
 package stepdefinitions;
 
-import api.client.AuthApiClient;
-import api.payloads.request.LoginRequest;
-import api.payloads.response.LoginResponse;
-import api.utils.ApiLoginUtil;
+//import api.client.LoginClient;
+//import api.payloads.request.LoginRequest;
+//import api.payloads.response.LoginResponse;
+
+import api.client.LoginClient;
+import api.model.request.LoginRequest;
+import api.model.response.LoginResponse;
+import api.service.LoginService;
 import io.cucumber.java.*;
 import io.qameta.allure.Allure;
 import managers.DriverManager;
@@ -39,12 +43,14 @@ public class Hook {
     private TestContextManager context;
     private DriverManager driverManager;
     private PageObjectManager pageObjectManager;
+    private final LoginService loginService;
 
     public Hook(TestContextManager context, DriverManager driverManager, PageObjectManager pageObjectManager)
             throws Exception {
         this.context = context;
         this.driverManager = driverManager;
         this.pageObjectManager = pageObjectManager;
+        this.loginService = new LoginService(context);
 
     }
 
@@ -203,25 +209,19 @@ public class Hook {
         validateCredentials(userKey, email, password);
         AllureUtility.addSubStepForData("User ID Data", "User ID", email);
 
-        // Create Request POJO (Java object)
-        LoginRequest request = new LoginRequest();
-        request.setUserEmail(email);
-        request.setUserPassword(password);
-
         // Call API Client
-        AuthApiClient authApiClient = new AuthApiClient();
-        LoginResponse response = authApiClient.login(request);  // passing login request java object and getting response as java object (SERIALIZATION + DESERIALIZATION)
+        LoginResponse response = loginService.loginToApplication(email, password);
 
         // Extract token from POJO response
-        String token = response.getToken();
-        String userId = response.getUserId();
-        String message = response.getMessage();
+        String token = response.token;
+        String userId = response.userId;
+        String message = response.message;
 
         // Store in context (parallel safe)
-        context.setToken(token);
-        context.setUserId(userId);
+//        context.setToken(token);
+//        context.setUserId(userId);
         logger.info("Token generated successfully");
-        logger.info("Login Message: {}",message);
+        logger.info("Login Message: {}", message);
 
         // Inject token into browser
         injectTokenAndNavigate(token);
