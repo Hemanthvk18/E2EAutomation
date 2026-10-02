@@ -5,6 +5,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * UserPoolManager manages pools of user keys for different roles.
+ * It allows acquiring and releasing user keys in a thread-safe manner.
+ *
+ * BlockingQueue is used to ensure that if a user key is not available, the thread will wait until one becomes available.
+ * ConcurrentHashMap allows multiple threads to access the map safely
+ * LinkedBlockingQueue ensures that each parallel test thread acquires a unique user in FIFO order.
+ * Once a test finishes, the user can be returned to the queue for reuse, preventing conflicts during parallel execution.
+ */
+
+
 public class UserPoolManager {
     private final Map<String, BlockingQueue<String>> userPools = new ConcurrentHashMap<>();
     private final ConfigReader configReader;

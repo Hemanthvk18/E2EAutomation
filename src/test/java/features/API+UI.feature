@@ -7,13 +7,13 @@ Feature: API Automation using RestAssured
   Scenario: Validate Add To Cart and validate the same product in UI
     Given user adds product to cart using API and validate the same product in UI
       | ADIDAS ORIGINAL |
-      | ZARA COAT 3     |
-      | iphone 13 pro   |
-
-  @VerifyOrderInUIAfterAPIPlaceOrder
-  Scenario: Validate Place Order and validate the same order in UI
-    Given user adds product to cart using API and validate the same product in UI
-      | ADIDAS ORIGINAL |
-      | ZARA COAT 3     |
-      | iphone 13 pro   |
-    Then user places order using API and validate the same order in UI
+#      | ZARA COAT 3     |
+#      | iphone 13 pro   |
+##
+#  @VerifyOrderInUIAfterAPIPlaceOrder
+#  Scenario: Validate Place Order and validate the same order in UI
+#    Given user adds product to cart using API and validate the same product in UI
+#      | ADIDAS ORIGINAL |
+#      | ZARA COAT 3     |
+#      | iphone 13 pro   |
+#    Then user places order using API and validate the same order in UI

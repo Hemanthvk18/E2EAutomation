@@ -22,24 +22,23 @@ public class HomePage {
     }
 
     @FindBy(xpath = "//*[@id='sidebar']//*[contains(normalize-space(.),'Home')]")
-    WebElement homepage;
+    private WebElement homepage;
 
     @FindBy(xpath = "//section//input[@placeholder='search']")
-    WebElement filterSearch;
+    private WebElement filterSearch;
 
     @FindBy(xpath = "//*[@role='alert' and contains(normalize-space(),'Product Added To Cart')]")
-    WebElement productAddedAlert;
+    private WebElement productAddedAlert;
 
     @FindBy(xpath = "//ul//button[contains(normalize-space(),'Cart')]")
-    WebElement cartButton;
+    private WebElement cartButton;
 
-//    @FindBy(css = ".card .card-img-top")
-//    WebElement productImages;
-
-    By productImages = By.cssSelector(".card .card-img-top");
+    private final By productImages = By.cssSelector(".card .card-img-top");
 
     @FindBy(xpath = "//img[@class='card-img-top']")
-    List<WebElement> productImageList;
+    private List<WebElement> productImageList;
+
+
 
     public List<WebElement> getProductImageList() {
         return productImageList;

@@ -5,6 +5,7 @@ public final class AuthContext {
     private static final ThreadLocal<String> BEARER = new ThreadLocal<>();
     private static final ThreadLocal<String> SESSION = new ThreadLocal<>();
 
+    //Bearer token
     public static String getBearerToken() {
         return BEARER.get();
     }
@@ -17,6 +18,7 @@ public final class AuthContext {
         BEARER.remove();
     }
 
+    //Session ID
     public static String getSessionId() {
         return SESSION.get();
     }
@@ -29,6 +31,7 @@ public final class AuthContext {
         SESSION.remove();
     }
 
+    // Clear all auth context
     public static void clearAll() {
         clearBearerToken();
         clearSessionId();

@@ -388,7 +388,17 @@ public class CustomWebElementActions {
         }
     }
 
+    /**
+     Supplier is a Java 8 functional interface that supports lazy evaluation.
+     Instead of passing a WebElement directly, we pass the logic required to obtain the element.
+
+     This allows a common method like performClick() to work with different sources,
+     such as a WebElement or a By locator, without duplicating code.
+     */
+
+
     public boolean customClick(WebElement element, String name) {
+        //lambda expression.
         return performClick(() -> customWait.waitForElementToBeClickable(element, name), name);
     }
 
@@ -404,7 +414,7 @@ public class CustomWebElementActions {
 
             // 1) First clickable attempt
 
-            WebElement el = supplier.get();
+            WebElement el = supplier.get();  //Lazy Evaluation
             if (el == null) {
                 logger.error("clickable element {} not found.", name);
                 return false;

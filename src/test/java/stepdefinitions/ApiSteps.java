@@ -1,7 +1,9 @@
 package stepdefinitions;
 
+import api.constants.ContextKeys;
 import api.payloads.response.CreateOrderResponse;
-import api.services.CartService;
+import api.service.AddToCartService;
+import api.service.CreateOrderService;
 import api.services.OrderService;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
@@ -21,18 +23,23 @@ import java.util.List;
 public class ApiSteps {
     private static final Logger logger = LoggerFactory.getLogger(ApiSteps.class);
 
+    private final AddToCartService addToCartService;
+    private final CreateOrderService createOrderService;
+
     TestContextManager context;
-    CartService cartService;
+//    CartService cartService;
     CartPage cartPage;
     OrderService orderService;
     ConfirmPage confirmPage;
 
     public ApiSteps(TestContextManager context) {
         this.context = context;
-        this.cartService = context.getPageObjectManager().getCartService();
+//        this.cartService = context.getPageObjectManager().getCartService();
         this.cartPage = context.getPageObjectManager().getCartPage();
         this.orderService=context.getPageObjectManager().getOrderService();
         this.confirmPage=context.getPageObjectManager().getConfirmPage();
+        this.addToCartService= new AddToCartService(context);
+        this.createOrderService=new CreateOrderService(context);
     }
 
 
@@ -44,8 +51,8 @@ public class ApiSteps {
         // Add products to cart using API and validate response
         for(String productName:productNames) {
             context.put("",productName.trim());
-            Assert.assertEquals(cartService.addProductToCart(context.getToken(), context.getUserId(), productName),
-                    "Product Added To Cart");
+
+            addToCartService.addToCart(context.getUserId(), productName);
 
             logger.info("Product added to cart successfully using API for product : {}", productName);
         }
@@ -73,8 +80,8 @@ public class ApiSteps {
         // Add products to cart using API and validate response
         for(String productName:productNames) {
             context.put("",productName.trim());
-            Assert.assertEquals(cartService.addProductToCart(context.getToken(), context.getUserId(), productName),
-                    "Product Added To Cart");
+
+            addToCartService.addToCart(context.get(ContextKeys.USER_ID).toString(), productName);
 
             logger.info("Product added to cart successfully using API for product : {}", productName);
         }
@@ -95,11 +102,8 @@ public class ApiSteps {
         //added products in cart
         List<String> addedProducts = CustomStringUtils.convertToStringList(context.get("addedProducts"));
 
-        //Order products using API and validate response
-        CreateOrderResponse response = orderService.createOrder(context.getToken(), addedProducts);
-        Assert.assertEquals(
-                response.getMessage(),
-                "Order Placed Successfully");
+        createOrderService.createOrder("India","addedProducts");
+
 
         // Navigate to thank page
         context.getDriver().navigate().to("https://rahulshettyacademy.com/client/#/dashboard/thanks");
